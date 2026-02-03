@@ -18,6 +18,7 @@ A central, scalable React application to host Privacy Policies and Terms & Condi
 * React Router v6
 
 # Project Structure
+ ```text
  src/
  ├── components/       # Reusable UI (Layout, AppCard)
  ├── data/            
@@ -28,7 +29,7 @@ A central, scalable React application to host Privacy Policies and Terms & Condi
  │   ├── LegitAiPolicies.tsx  # Custom text for LegitAi
  │   └── registry.ts          # Maps App IDs to Policy Files
  └── App.tsx           # Router setup
-
+```
 # How to Add a New App
 1. Add App Data
  Open src/data/apps.ts and add a new object to the apps array:
