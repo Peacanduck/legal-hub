@@ -23,3 +23,17 @@ export const DefaultTerms: React.FC<PolicyProps> = ({ appName }) => (
     <p>Use this app responsibly.</p>
   </>
 );
+
+export const DefaultLicense: React.FC<PolicyProps> = ({ appName }) => (
+  <>
+    <h3>Standard License</h3>
+    <p>This application is licensed to you for personal use only. You may not redistribute or modify the application binary.</p>
+  </>
+);
+
+export const DefaultCopyright: React.FC<PolicyProps> = ({ appName }) => (
+  <>
+    <h3>Copyright</h3>
+    <p>&copy; {new Date().getFullYear()} {appName}. All rights reserved.</p>
+  </>
+);

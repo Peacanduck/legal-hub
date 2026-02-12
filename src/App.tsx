@@ -18,6 +18,8 @@ function App() {
           <Route path="/:appId" element={<AppHome />} />
           <Route path="/:appId/privacy" element={<LegalDoc type="privacy" />} />
           <Route path="/:appId/terms" element={<LegalDoc type="terms" />} />
+          <Route path="/:appId/license" element={<LegalDoc type="license" />} />
+          <Route path="/:appId/copyright" element={<LegalDoc type="copyright" />} />    
           
           {/* Catch all - Redirect to Home */}
           <Route path="*" element={<Navigate to="/" replace />} />

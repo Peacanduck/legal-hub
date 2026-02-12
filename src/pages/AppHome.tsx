@@ -14,16 +14,20 @@ export const AppHome = () => {
       </div>
       
       <h1>{app.name} Legal</h1>
-      <p>Select a document below to view the details for <strong>{app.name}</strong>.</p>
+      <p>Legal documentation and compliance information for <strong>{app.name}</strong>.</p>
 
       <div className="button-list">
-        <Link to={`/${app.id}/privacy`} className="card" style={{ flex: 1, minWidth: '200px' }}>
+        <Link to={`/${app.id}/privacy`} className="card" style={{ flex: '1 1 45%' }}>
           <h3>🔒 Privacy Policy</h3>
-          <p style={{ color: '#666' }}>How we handle your data.</p>
         </Link>
-        <Link to={`/${app.id}/terms`} className="card" style={{ flex: 1, minWidth: '200px' }}>
+        <Link to={`/${app.id}/terms`} className="card" style={{ flex: '1 1 45%' }}>
           <h3>📜 Terms & Conditions</h3>
-          <p style={{ color: '#666' }}>Rules for using the app.</p>
+        </Link>
+        <Link to={`/${app.id}/license`} className="card" style={{ flex: '1 1 45%' }}>
+          <h3>⚖️ License (EULA)</h3>
+        </Link>
+        <Link to={`/${app.id}/copyright`} className="card" style={{ flex: '1 1 45%' }}>
+          <h3>©️ Copyright</h3>
         </Link>
       </div>
     </div>
