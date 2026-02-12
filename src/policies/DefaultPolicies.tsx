@@ -27,7 +27,7 @@ export const DefaultTerms: React.FC<PolicyProps> = ({ appName }) => (
 export const DefaultLicense: React.FC<PolicyProps> = ({ appName }) => (
   <>
     <h3>Standard License</h3>
-    <p>This application is licensed to you for personal use only. You may not redistribute or modify the application binary.</p>
+    <p>This application {appName} is licensed to you for personal use only. You may not redistribute or modify the application binary.</p>
   </>
 );
 
