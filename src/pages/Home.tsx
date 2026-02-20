@@ -4,10 +4,10 @@ import { apps } from '../data/apps';
 export const Home = () => {
   return (
     <div>
-      <h1>Legal Hub</h1>
-      <p className="meta-info">Central repository for Privacy Policies and Terms of Service.</p>
+      <h1>Welcome to PyroLabs</h1>
+      <p className="meta-info">The project directory for Pyrolabs.</p>
       
-      <h2>My Applications</h2>
+      <h2>Our Projects</h2>
       <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', marginTop: '1.5rem' }}>
         {apps.map((app) => (
           <AppCard key={app.id} id={app.id} name={app.name} />

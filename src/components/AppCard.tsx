@@ -15,7 +15,7 @@ export const AppCard = ({ id, name, description }: AppCardProps) => {
       </div>
       {description && <p style={{ color: '#666', margin: 0 }}>{description}</p>}
       <div style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#2563eb', fontWeight: 500 }}>
-        View Legal Docs
+        View Project
       </div>
     </Link>
   );
