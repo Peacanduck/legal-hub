@@ -10,7 +10,7 @@ export const Home = () => {
       <h2>Our Projects</h2>
       <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', marginTop: '1.5rem' }}>
         {apps.map((app) => (
-          <AppCard key={app.id} id={app.id} name={app.name} />
+          <AppCard key={app.id} id={app.id} name={app.name} description={app.tagline} />
         ))}
       </div>
     </div>

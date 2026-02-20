@@ -1,6 +1,7 @@
 export interface AppData {
   id: string; // Used in URL (e.g., /legitai)
   name: string;
+  type?: 'game' | 'app';
   tagline?: string;       // Short description for the home page cards
   description?: string;   // Long description for the app's landing page
   features?: string[];    // Bullet points for the landing page
@@ -20,6 +21,7 @@ export const apps: AppData[] = [
   {
     id: 'legitai',
     name: 'LegitAi',
+    type: 'app',
     tagline: 'AI-powered scam detection.',
     description: 'LegitAi analyzes text conversations to identify potential fraud indicators, providing risk assessments to help users protect themselves from scams and phishing attempts.',
     features: [
@@ -38,6 +40,7 @@ export const apps: AppData[] = [
   {
     id: 'diggle',
     name: 'Diggle',
+    type: 'game',
     tagline: 'A casual mobile game.',
     description: 'Diggle is an casual game designed for engaging play sessions on your mobile device. Upgrade your mining rig by mining ores and selling them for gold ',
     features: [
