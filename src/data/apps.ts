@@ -59,6 +59,31 @@ export const apps: AppData[] = [
     developerName: 'PeacanDuck',
     contactEmail: 'support.diggle@proton.me',
     lastUpdated: 'Febuary 3, 2026'
+  },
+  {
+    id: 'vorta',
+    name: 'Vorta',
+    type: 'game',
+    tagline: 'One tap to reverse. Thread the closing rings.',
+    description: 'Vorta is a one-thumb arcade game about threading impossible gaps. You orbit a glowing core while rings close in from the dark, each carrying a gap you have to find. Tap anywhere to reverse your direction — that is the entire control scheme. Motes drifting between the rings build a combo multiplier that decays in three and a half seconds, so playing it safe bleeds your score away and chasing every mote gets you killed. A run lasts about thirty seconds. Your best one will haunt you for longer.',
+    features: [
+      'One-tap controls — the entire game is a single input',
+      'A combo system that rewards nerve over caution',
+      'Unlockable skins that recolour the whole playfield',
+      'Offline play, no account required',
+      'Fair by construction — every ring is verified reachable',
+      'Optional Remove Ads upgrade'
+    ],
+    link: '#', // Play Store link — swap in once the listing is live
+    banner: '/VortaFeature1024x500.png',
+    logo: '/VortaIcon1024.png',
+    socials: {
+      discord: '',
+      x: ''
+    },
+    developerName: 'PyroLabs',
+    contactEmail: 'fu.developer@gmail.com',
+    lastUpdated: 'August 5, 2026'
   }
 ];
 
