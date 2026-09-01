@@ -83,7 +83,7 @@ export const apps: AppData[] = [
     },
     developerName: 'PyroLabs',
     contactEmail: 'fu.developer@gmail.com',
-    lastUpdated: 'August 5, 2026'
+    lastUpdated: 'September 1, 2026'
   }
 ];
 

@@ -9,7 +9,11 @@ interface PolicyProps {
 const COMPANY_NAME = "PyroLabs";
 const PACKAGE_ID = "com.pyrolabs.vorta";
 const GOVERNING_LAW = "South Africa";
-const EFFECTIVE_DATE = "5 August 2026";
+// Both dates move together on a material change, which is what the "Changes"
+// section of each document promises. Keep in step with the copies bundled in
+// the app: store/privacy-policy.md and store/terms-and-conditions.md in the
+// Vorta repo are the source, and the app renders them directly.
+const EFFECTIVE_DATE = "1 September 2026";
 const YEAR = new Date().getFullYear();
 
 // --- 1. PRIVACY POLICY ---
@@ -46,7 +50,8 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
         <tr><td>Coin balance</td><td>To spend on in-app items</td></tr>
         <tr><td>Unlocked skins</td><td>To remember what you own</td></tr>
         <tr><td>Sound and haptics settings</td><td>To remember your preferences</td></tr>
-        <tr><td>Whether you have seen the tutorial hint</td><td>So it appears only once</td></tr>
+        <tr><td>How far through the coaching hints you are</td><td>So they appear once, and resume where you left off</td></tr>
+        <tr><td>Whether the app has asked you to rate it</td><td>So it asks at most once per version</td></tr>
       </tbody>
     </table>
     <p>
@@ -62,7 +67,7 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
     </p>
 
     <h3>Google AdMob &mdash; advertising</h3>
-    <p>Provides the interstitial and rewarded video ads. AdMob collects:</p>
+    <p>Provides the banner, interstitial and rewarded video ads. AdMob collects:</p>
     <ul>
       <li>your device's <strong>advertising ID</strong> (a resettable identifier used for ads);</li>
       <li>device and app information, such as device model, operating system version, language, and app version;</li>
@@ -115,8 +120,9 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
     <h2>In-app purchases</h2>
     <p>
       {appName} sells consumable coins, cosmetic skins and a Remove Ads upgrade. Remove Ads suppresses
-      full-screen interstitial ads. Optional rewarded videos &mdash; the ones you choose to watch in
-      exchange for a continue or coins &mdash; remain available, and watching one is always your choice.
+      the banner above the play area and the full-screen interstitial ads between runs. Optional
+      rewarded videos &mdash; the ones you choose to watch in exchange for a continue or coins &mdash;
+      remain available, and watching one is always your choice.
     </p>
 
     <h2>Age ratings and children</h2>
@@ -166,6 +172,39 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
       <strong>California users:</strong> we do not sell personal information for money. Sharing advertising
       identifiers with ad providers for personalised advertising may be treated as "sharing" under the
       CCPA/CPRA; you may opt out using the Android ads settings described above.
+    </p>
+
+    <h2>South Africa and POPIA</h2>
+    <p>
+      We are based in {GOVERNING_LAW}, so the Protection of Personal Information Act 4 of 2013
+      ("POPIA") applies to this app. {COMPANY_NAME} is the <strong>responsible party</strong> for the
+      processing described in this policy. The advertising and purchase providers listed above
+      determine their own purposes and means, so they are responsible parties in their own right
+      rather than our operators.
+    </p>
+    <p>
+      The information involved is device-level &mdash; an advertising identifier, device and app
+      characteristics, an approximate location derived from your IP address, and purchase records.
+      We hold no name, email address, account or contact details for any player, and no server-side
+      copy of anything.
+    </p>
+    <p>
+      We process it on two bases: your <strong>consent</strong>, where the law requires consent for
+      personalised advertising, and our <strong>legitimate interests</strong> in delivering, securing
+      and being paid for the app.
+    </p>
+    <p>
+      Under POPIA you may ask us to confirm what personal information we hold about you, to correct or
+      delete it, and you may object to processing. Write to <a href={`mailto:${email}`}>{email}</a>.
+      Because the app holds no account, we usually cannot connect a request to a specific
+      installation, and the honest answer will often be that we hold nothing identifying you &mdash;
+      in which case the effective controls are the Android advertising ID settings above and the
+      providers' own policies.
+    </p>
+    <p>
+      If you are not satisfied with how we handle a request, you may complain to the Information
+      Regulator (South Africa):{' '}
+      <a href="https://inforegulator.org.za" target="_blank" rel="noreferrer">https://inforegulator.org.za</a>
     </p>
 
     <h2>Data retention</h2>
@@ -256,7 +295,7 @@ export const VortaTerms: React.FC<PolicyProps> = ({ appName, email }) => (
       <li>All purchases are processed by <strong>Google Play</strong>. We never see or handle your payment details. Google's own terms apply to the transaction.</li>
       <li>Prices are shown by the store in your local currency before you confirm.</li>
       <li>Coins are consumed when spent and are not refundable once spent.</li>
-      <li>Remove Ads suppresses full-screen interstitial advertising. Optional rewarded videos &mdash; the ones you choose to watch in exchange for a continue or coins &mdash; remain available, because they are always your choice to watch.</li>
+      <li>Remove Ads suppresses the banner above the play area and the full-screen interstitial advertising between runs. Optional rewarded videos &mdash; the ones you choose to watch in exchange for a continue or coins &mdash; remain available, because they are always your choice to watch.</li>
     </ul>
     <p>
       <strong>Refunds.</strong> Your statutory rights are unaffected and, depending on where you live, may
