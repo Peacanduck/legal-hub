@@ -6,7 +6,7 @@ interface PolicyProps {
   email: string;
 }
 
-const COMPANY_NAME = "PyroLabs";
+const COMPANY_NAME = "Py Digital";
 const PACKAGE_ID = "com.pyrolabs.vorta";
 const GOVERNING_LAW = "South Africa";
 // Both dates move together on a material change, which is what the "Changes"

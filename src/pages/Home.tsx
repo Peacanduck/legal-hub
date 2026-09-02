@@ -4,8 +4,8 @@ import { apps } from '../data/apps';
 export const Home = () => {
   return (
     <div>
-      <h1>Welcome to PyroLabs</h1>
-      <p className="meta-info">The project directory for Pyrolabs.</p>
+      <h1>Welcome to Py Digital</h1>
+      <p className="meta-info">The project directory for Py Digital.</p>
       
       <h2>Our Projects</h2>
       <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', marginTop: '1.5rem' }}>
