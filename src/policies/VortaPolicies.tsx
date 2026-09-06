@@ -13,7 +13,7 @@ const GOVERNING_LAW = "South Africa";
 // section of each document promises. Keep in step with the copies bundled in
 // the app: store/privacy-policy.md and store/terms-and-conditions.md in the
 // Vorta repo are the source, and the app renders them directly.
-const EFFECTIVE_DATE = "1 September 2026";
+const EFFECTIVE_DATE = "4 September 2026";
 const YEAR = new Date().getFullYear();
 
 // --- 1. PRIVACY POLICY ---
@@ -31,8 +31,8 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
 
     <h2>The short version</h2>
     <ul>
-      <li>There is no account, no login and no sign-up. We never ask you for your name, email address, phone number or date of birth.</li>
-      <li>Your progress &mdash; high score, coins, unlocked skins and settings &mdash; is stored <strong>on your device only</strong>. We cannot see it, and uninstalling the app erases it.</li>
+      <li>There is no account with us, and we never ask you for your name, email address, phone number or date of birth. The app can optionally sign in to <strong>Google Play Games</strong> &mdash; Android may do this automatically &mdash; to sync your progress across devices and to power leaderboards and achievements. You can play the whole game without signing in.</li>
+      <li>Your progress &mdash; high score, coins, unlocked skins and settings &mdash; is stored <strong>on your device</strong>. If you are signed in to Google Play Games, a copy of your coins, skins and stats is <strong>also saved to your Google Play Games account</strong> so it survives a reinstall or a new phone. <strong>We keep no copy on any server of ours; that cloud data lives with Google.</strong></li>
       <li>The app shows ads and sells optional in-app purchases. The companies that provide those services do collect data about your device, and that is the main privacy consideration in this app.</li>
     </ul>
 
@@ -55,15 +55,37 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
       </tbody>
     </table>
     <p>
-      This information stays on the device. It is not transmitted to us and we hold no copy of it.
-      It is removed when you uninstall the app.
+      This information stays on the device. It is not transmitted to us, and we keep no copy of it on any
+      server of ours. It is removed when you uninstall the app. If you are signed in to Google Play Games,
+      a copy of your coins, unlocked skins and game stats is also saved to your Google Play Games account
+      &mdash; see <strong>Google Play Games Services</strong> below.
     </p>
 
     <h2>What third parties collect</h2>
     <p>
-      To show ads and process purchases, the app includes software from the companies below. They act as
-      independent controllers of the data they collect and handle it under their own privacy policies,
-      which we link to here.
+      To sign you in, sync your progress, show ads and process purchases, the app includes software from the
+      companies below. They act as independent controllers of the data they collect and handle it under
+      their own privacy policies, which we link to here.
+    </p>
+
+    <h3>Google Play Games Services</h3>
+    <p>
+      Powers optional sign-in, the global leaderboard, achievements, and cloud saving of your progress.
+      Sign-in is handled by Google and is optional &mdash; Android may sign you in automatically if you
+      already use Play Games, and you can play the entire game signed out, in which case none of the data
+      below leaves your device. When you are signed in, Google collects and stores:
+    </p>
+    <ul>
+      <li>your <strong>Play Games player ID and display name</strong> (a gaming profile Google maintains; it is not created by us);</li>
+      <li>the <strong>scores you set</strong>, submitted to the game's leaderboard;</li>
+      <li>your <strong>achievement progress</strong> &mdash; which milestones you have reached;</li>
+      <li>a <strong>cloud copy of your progress</strong>: your coin balance, unlocked and equipped skins, and game stats (high score, total runs, best combo, total gaps), so it restores on a new device.</li>
+    </ul>
+    <p>
+      Your device settings and which sound set you hear are <strong>not</strong> sent to Google Play Games.
+      You manage sign-in, and can delete your saved game data, in the <strong>Google Play Games</strong> app
+      and your Google account.<br />
+      Policy: <a href="https://policies.google.com/privacy" target="_blank" rel="noreferrer">https://policies.google.com/privacy</a>
     </p>
 
     <h3>Google AdMob &mdash; advertising</h3>
@@ -87,7 +109,7 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
     </p>
     <ul>
       <li>your <strong>purchase history</strong> for this app, and the receipt Google Play issues;</li>
-      <li>a randomly generated anonymous user ID that identifies your installation. It is not derived from your name, email or Google account;</li>
+      <li>an <strong>app user ID</strong> that identifies your purchases. When you are signed in to Google Play Games this is your <strong>Play Games player ID</strong> &mdash; a pseudonymous gaming identifier, not your name, email or Google account login &mdash; so that a purchase follows your game profile to your other devices. Signed out, it is a random per-install identifier;</li>
       <li>device and country information.</li>
     </ul>
     <p>Policy: <a href="https://www.revenuecat.com/privacy" target="_blank" rel="noreferrer">https://www.revenuecat.com/privacy</a></p>
@@ -157,10 +179,12 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
       information.
     </p>
     <p>
-      Because the app holds no account and stores your progress only on your device, the fastest way to
-      erase everything we could possibly be associated with is to <strong>uninstall the app</strong> and{' '}
-      <strong>reset your advertising ID</strong>. For data held by the providers listed above, exercise
-      your rights with them directly through the links in their policies, or write to us at{' '}
+      Because you have no account with us, and your progress lives on your device (and, if you
+      are signed in, in your own Google Play Games account), the fastest way to erase everything we could
+      possibly be associated with is to <strong>uninstall the app</strong>, <strong>reset your advertising
+      ID</strong>, and &mdash; if you signed in &mdash; <strong>delete the app's saved game data in the
+      Google Play Games app</strong>. For data held by the providers listed above, exercise your rights with
+      them directly through the links in their policies, or write to us at{' '}
       <a href={`mailto:${email}`}>{email}</a> and we will help route the request.
     </p>
     <p>
@@ -178,15 +202,17 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
     <p>
       We are based in {GOVERNING_LAW}, so the Protection of Personal Information Act 4 of 2013
       ("POPIA") applies to this app. {COMPANY_NAME} is the <strong>responsible party</strong> for the
-      processing described in this policy. The advertising and purchase providers listed above
-      determine their own purposes and means, so they are responsible parties in their own right
-      rather than our operators.
+      processing described in this policy. The Google Play Games, advertising and purchase providers
+      listed above determine their own purposes and means, so they are responsible parties in their own
+      right rather than our operators.
     </p>
     <p>
-      The information involved is device-level &mdash; an advertising identifier, device and app
-      characteristics, an approximate location derived from your IP address, and purchase records.
-      We hold no name, email address, account or contact details for any player, and no server-side
-      copy of anything.
+      The information involved is device-level and profile-level &mdash; an advertising identifier, device
+      and app characteristics, an approximate location derived from your IP address, purchase records, and,
+      if you sign in to Google Play Games, your Play Games profile and a cloud copy of your game progress.
+      We hold no name, email address, account or contact details for any player, and no copy on
+      infrastructure of ours &mdash; the cloud-saved progress, scores and achievement state are held by
+      Google.
     </p>
     <p>
       We process it on two bases: your <strong>consent</strong>, where the law requires consent for
@@ -196,10 +222,10 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
     <p>
       Under POPIA you may ask us to confirm what personal information we hold about you, to correct or
       delete it, and you may object to processing. Write to <a href={`mailto:${email}`}>{email}</a>.
-      Because the app holds no account, we usually cannot connect a request to a specific
+      Because you have no account with us, we usually cannot connect a request to a specific
       installation, and the honest answer will often be that we hold nothing identifying you &mdash;
-      in which case the effective controls are the Android advertising ID settings above and the
-      providers' own policies.
+      in which case the effective controls are the Android advertising ID settings above, the deletion of
+      your Google Play Games saved data, and the providers' own policies.
     </p>
     <p>
       If you are not satisfied with how we handle a request, you may complain to the Information
@@ -209,7 +235,10 @@ export const VortaPrivacy: React.FC<PolicyProps> = ({ appName, email }) => (
 
     <h2>Data retention</h2>
     <p>
-      We hold no server-side copy of your data. Retention by the providers above is governed by their own policies.
+      We keep no copy of your data on infrastructure of ours. Progress you cloud-save to Google Play Games,
+      and your leaderboard and achievement records, are retained by Google under its own policy; you can
+      delete the saved game data from the Google Play Games app. Retention by the other providers above is
+      governed by their own policies.
     </p>
 
     <h2>Security</h2>
@@ -304,10 +333,12 @@ export const VortaTerms: React.FC<PolicyProps> = ({ appName, email }) => (
       If Google refunds a purchase, the corresponding entitlement is removed.
     </p>
     <p>
-      <strong>Losing your items.</strong> Your progress and balance are stored on your device. Purchases are
-      restored through your Google account using the Restore Purchases option in Settings. Consumable coins
-      that were already spent cannot be restored. Uninstalling the app erases local progress, including
-      unspent coins.
+      <strong>Losing your items.</strong> Your progress and balance are stored on your device and, if you
+      are signed in to Google Play Games, also backed up to your Google Play Games account, so your coins,
+      skins and stats can restore on a new device. Purchases are restored through your Google account using
+      the Restore Purchases option in Settings. Consumable coins that were already spent cannot be restored.
+      Uninstalling the app erases local progress, and progress restores only as far as your last cloud save
+      (or, if you were never signed in, not at all).
     </p>
 
     <h2>5. Advertising</h2>
@@ -331,6 +362,12 @@ export const VortaTerms: React.FC<PolicyProps> = ({ appName, email }) => (
     <p>
       The app needs a network connection for advertising, purchases and restoring entitlements. Gameplay
       itself works offline.
+    </p>
+    <p>
+      Leaderboards, achievements and cloud saving of your progress are <strong>optional online features that
+      require Google Play Games</strong>. Signing in is optional and the whole game is playable without it;
+      when you use these features they are provided by Google under its own terms, and they may change or be
+      unavailable.
     </p>
 
     <h2>7. Our intellectual property</h2>
