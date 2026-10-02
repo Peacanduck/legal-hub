@@ -9,24 +9,37 @@ export type Cluster = 'mainnet' | 'devnet';
 
 interface NetworkConfig {
   cluster: Cluster;
+  label: string;
   rpc: string;
+  /** True when the RPC came from an env var rather than the public fallback. */
+  customRpc: boolean;
   candyMachine: string;
   explorerSuffix: string;
 }
 
+const mainnetRpc = import.meta.env.VITE_SOLANA_RPC_MAINNET;
+const devnetRpc = import.meta.env.VITE_SOLANA_RPC_DEVNET;
+
 const NETWORKS: Record<Cluster, NetworkConfig> = {
   mainnet: {
     cluster: 'mainnet',
-    // Public RPC works for reads but is rate-limited. Set
-    // VITE_SOLANA_RPC_MAINNET to a domain-restricted Helius (or similar)
-    // endpoint before launch traffic arrives.
-    rpc: import.meta.env.VITE_SOLANA_RPC_MAINNET || 'https://api.mainnet-beta.solana.com',
+    label: 'Mainnet',
+    // api.mainnet-beta.solana.com answers browser requests with 403 Access
+    // forbidden, so it can't be the fallback. PublicNode's free endpoint
+    // accepts them (verified 2026-10-02) and keeps the page working with no
+    // config. For launch traffic, set VITE_SOLANA_RPC_MAINNET to your own
+    // endpoint (e.g. Helius) with this domain on its allowlist — the URL
+    // ships to the browser, so a key in it is public.
+    rpc: mainnetRpc || 'https://solana-rpc.publicnode.com',
+    customRpc: !!mainnetRpc,
     candyMachine: '7LtViZU4Y672qZVC6jxHPipVEHXeCKUcKR6cG8zMCwqP',
     explorerSuffix: '',
   },
   devnet: {
     cluster: 'devnet',
-    rpc: import.meta.env.VITE_SOLANA_RPC_DEVNET || 'https://api.devnet.solana.com',
+    label: 'Devnet',
+    rpc: devnetRpc || 'https://api.devnet.solana.com',
+    customRpc: !!devnetRpc,
     candyMachine: '3iniDHsBymdEdxB7yvRG4sE11JXP1d89dqvXfTsXWNr2',
     explorerSuffix: '?cluster=devnet',
   },
@@ -44,6 +57,18 @@ export const CLUSTER: Cluster =
     : 'mainnet';
 
 export const NETWORK = NETWORKS[CLUSTER];
+
+/** Hostname only — an API key in the URL's path or query never displays. */
+export const RPC_HOST = (() => {
+  try {
+    return new URL(NETWORK.rpc).host;
+  } catch {
+    return 'RPC';
+  }
+})();
+
+/** The env var that overrides this cluster's RPC, for error messages. */
+export const RPC_ENV_VAR = CLUSTER === 'devnet' ? 'VITE_SOLANA_RPC_DEVNET' : 'VITE_SOLANA_RPC_MAINNET';
 
 export const explorer = {
   token: (mint: string) => `https://solscan.io/token/${mint}${NETWORK.explorerSuffix}`,

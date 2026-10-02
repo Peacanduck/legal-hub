@@ -2,6 +2,8 @@
 // act on. Matching is on message text because the errors arrive from four
 // different libraries with no shared type.
 
+import { NETWORK, RPC_ENV_VAR, RPC_HOST } from '../config';
+
 const messageOf = (e: unknown): string => {
   if (e instanceof Error) return `${e.name}: ${e.message}`;
   if (typeof e === 'string') return e;
@@ -32,4 +34,24 @@ export function describeMintError(e: unknown): string {
   if (/429|rate limit|Too Many Requests/i.test(m)) return 'The network is busy. Wait a few seconds and try again.';
 
   return `Something went wrong: ${m.slice(0, 160)}`;
+}
+
+/** Why the candy machine couldn't be read. Names the endpoint and, when the
+ *  fix is a config change, the env var that makes it. */
+export function describeReadError(e: unknown): string {
+  const m = messageOf(e);
+
+  if (/\b40[13]\b|forbidden|unauthori[sz]ed|api key/i.test(m)) {
+    return `${RPC_HOST} refused requests from this site (403). Point ${RPC_ENV_VAR} at an RPC endpoint that allows browser requests.`;
+  }
+  if (/\b429\b|too many requests|rate limit/i.test(m)) {
+    return `${RPC_HOST} is rate-limiting requests. The page retries every 20 seconds.`;
+  }
+  if (/failed to fetch|networkerror|load failed|network request failed/i.test(m)) {
+    return `Couldn’t reach ${RPC_HOST}. Check your connection.`;
+  }
+  if (/was not found|account.*not found|AccountNotFound/i.test(m)) {
+    return `No candy machine at ${NETWORK.candyMachine.slice(0, 4)}… on ${NETWORK.label}.`;
+  }
+  return m.slice(0, 200);
 }

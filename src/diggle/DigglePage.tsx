@@ -10,7 +10,7 @@ import './diggle.css';
 import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import type { WalletError } from '@solana/wallet-adapter-base';
-import { CLUSTER, LINKS, NETWORK, explorer } from './config';
+import { CLUSTER, LINKS, NETWORK, RPC_HOST, explorer } from './config';
 import { FAQ, ORES, RARITIES, SLOTS, STRATA, UPGRADES, uniformLoadout } from './content';
 import { shortAddress } from './format';
 import { SolanaProviders } from './solana/SolanaProviders';
@@ -484,6 +484,7 @@ export const DigglePage = () => {
 
 const Provenance = ({ state }: { state: CandyState | null }) => {
   const rows: { label: string; value: string; href?: string; full?: string }[] = [
+    { label: 'Network', value: `${NETWORK.label} · via ${RPC_HOST}` },
     {
       label: 'Candy machine',
       value: shortAddress(NETWORK.candyMachine),

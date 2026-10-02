@@ -334,7 +334,8 @@ html:has(body.dg-page) { scroll-behavior: smooth; }
 .dg-pill--live .dg-pill-dot { animation: dg-blink 1.6s steps(2, jump-none) infinite; }
 .dg-pill--wait { color: var(--dg-warn); }
 .dg-pill--done { color: var(--dg-ink-3); }
-.dg-pill--devnet { color: var(--dg-crystal); }
+.dg-pill--net-mainnet { color: var(--dg-gold); }
+.dg-pill--net-devnet { color: var(--dg-crystal); }
 @keyframes dg-blink { 50% { opacity: .25; } }
 
 /* The sealed crate is the NFT's own artwork — a full scene with its own

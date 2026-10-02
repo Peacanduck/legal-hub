@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { PublicKey } from '@metaplex-foundation/umi';
+import { NETWORK, RPC_HOST } from '../config';
+import { describeReadError } from './errors';
 
 /** Everything the mint console needs, read straight from chain. */
 export interface CandyState {
@@ -31,6 +33,12 @@ export const loadCandyState = async (): Promise<CandyState> => (await reads()).l
 export const loadWalletMintInfo = async (state: CandyState, owner: string): Promise<WalletMintInfo> =>
   (await reads()).loadWalletMintInfo(state, owner);
 
+const logReadFailure = (e: unknown) =>
+  console.error(
+    `Diggle: couldn't read the ${NETWORK.label} candy machine ${NETWORK.candyMachine} via ${RPC_HOST}`,
+    e,
+  );
+
 /** Candy machine state, refreshed on an interval while the tab is visible. */
 export function useCandyState(pollMs = 20_000) {
   const [state, setState] = useState<CandyState | null>(null);
@@ -41,8 +49,8 @@ export function useCandyState(pollMs = 20_000) {
       setState(await loadCandyState());
       setError(null);
     } catch (e) {
-      console.error('Diggle: candy machine read failed', e);
-      setError(e instanceof Error ? e.message : String(e));
+      logReadFailure(e);
+      setError(describeReadError(e));
     }
   }, []);
 
@@ -58,8 +66,8 @@ export function useCandyState(pollMs = 20_000) {
         },
         (e: unknown) => {
           if (cancelled) return;
-          console.error('Diggle: candy machine read failed', e);
-          setError(e instanceof Error ? e.message : String(e));
+          logReadFailure(e);
+          setError(describeReadError(e));
         },
       );
     void poll();

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
-import { CLUSTER, MINT_OVERHEAD_SOL, explorer } from '../config';
+import { CLUSTER, MINT_OVERHEAD_SOL, NETWORK, RPC_HOST, explorer } from '../config';
 import { loadWalletMintInfo, type CandyState, type WalletMintInfo } from '../solana/candyState';
 import type { MintOutcome, MintStage } from '../solana/mint';
 import { describeMintError } from '../solana/errors';
@@ -121,8 +121,17 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
   };
 
   // One primary action, whose label always says exactly what it will do.
-  let action: { label: string; onClick?: () => void; note?: string } = { label: 'Reading the candy machine…' };
-  if (!state && stateError) action = { label: 'Retry', onClick: () => void refresh(), note: 'Couldn’t reach the candy machine.' };
+  let action: { label: string; onClick?: () => void; note?: string; isError?: boolean } = {
+    label: 'Reading the candy machine…',
+  };
+  if (!state && stateError) {
+    action = {
+      label: 'Retry',
+      onClick: () => void refresh(),
+      note: `Couldn’t read the ${NETWORK.label} candy machine. ${stateError}`,
+      isError: true,
+    };
+  }
   else if (!state) action = { label: 'Reading the candy machine…' };
   else if (soldOut) action = { label: 'Sold out' };
   else if (notStarted) action = { label: `Opens ${formatDate(state.startsAt!)}` };
@@ -134,6 +143,7 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
       label: 'Retry wallet check',
       onClick: () => void refreshInfo(),
       note: 'Couldn’t read this wallet’s balance and mint count.',
+      isError: true,
     };
   } else if (!walletInfo) action = { label: 'Checking your wallet…' };
   else if (walletLeft === 0) action = { label: `Wallet limit reached (${walletInfo.minted}/${state.mintLimit?.limit})` };
@@ -166,7 +176,10 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
       <div className="dg-console-head">
         <span className="dg-pixel dg-console-eyebrow">Surface depot</span>
         <span className="dg-console-tags">
-          {CLUSTER === 'devnet' && <span className="dg-pill dg-pill--devnet">Devnet</span>}
+          {/* Always shown: which chain a mint would land on is never a guess. */}
+          <span className={`dg-pill dg-pill--net-${CLUSTER}`} title={`Reading the chain through ${RPC_HOST}`}>
+            {NETWORK.label}
+          </span>
           {status && (
             <span className={`dg-pill dg-pill--${status.tone}`}>
               <span className="dg-pill-dot" aria-hidden="true" />
@@ -262,7 +275,14 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
           >
             {action.label}
           </button>
-          {action.note && <p className="dg-console-note">{action.note}</p>}
+          {action.note &&
+            (action.isError ? (
+              <p className="dg-console-error" role="alert">
+                {action.note}
+              </p>
+            ) : (
+              <p className="dg-console-note">{action.note}</p>
+            ))}
 
           {phase.kind === 'error' && (
             <p className="dg-console-error" role="alert">
