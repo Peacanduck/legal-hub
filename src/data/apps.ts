@@ -41,20 +41,22 @@ export const apps: AppData[] = [
     id: 'diggle',
     name: 'Diggle',
     type: 'game',
-    tagline: 'A casual mobile game.',
-    description: 'Diggle is an casual game designed for engaging play sessions on your mobile device. Upgrade your mining rig by mining ores and selling them for gold ',
+    tagline: 'Mine deep. Sell high. Upgrade. A pixel-art mining game for Solana Mobile.',
+    // /diggle renders its own page (src/diggle/); these fields feed the
+    // Py Digital home card and the legal pages.
+    description: 'Pilot a drill down through four hostile strata, haul ore back to the surface, and rebuild your rig from gear you own. Free on the Solana dApp Store.',
     features: [
-      'in game store', 
-      'Unlockable characters & skins tba', 
-      'Global leaderboards in progress'
+      'Four strata, eight ores, six upgrade tracks',
+      'Diggle Machine NFTs equip as in-game gear',
+      'Available in seven languages'
     ],
-    link: '#', // Add your actual store link here
+    link: 'solanadappstore://details?id=com.example.diggle',
     // Reference the images placed in your public/ directory
-    banner: '/DiggleBannerLong.png', 
-    logo: '/DiggleBanner1200x1200.png', 
+    banner: '/DiggleBannerLong.png',
+    logo: '/diggle/collection.png',
     socials: {
-      discord: '',
-      x: ''
+      discord: 'https://discord.gg/QH4uUfK2wR',
+      x: 'https://x.com/DiggleOnSol'
     },
     developerName: 'PeacanDuck',
     contactEmail: 'support.diggle@proton.me',
