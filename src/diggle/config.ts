@@ -83,7 +83,7 @@ export const LINKS = {
   // Solana Mobile's documented listing deep link. Resolves only on a
   // device with the dApp Store installed (Seeker, Saga).
   dappStore: 'solanadappstore://details?id=com.example.diggle',
-  support: 'mailto:support.diggle@proton.me',
+  support: 'mailto:fu.developer@gmail.com',
 };
 
 // Headroom per mint for rent (mint, metadata, edition, token account) and

@@ -1,7 +1,7 @@
 import React from 'react';
 import { DefaultPrivacy, DefaultTerms, DefaultLicense, DefaultCopyright } from './DefaultPolicies';
 import { LegitAiPrivacy, LegitAiTerms } from './LegitAiPolicies';
-import { DigglePrivacy, DiggleLicense, DiggleCopyright } from './DigglePolicies';
+import { DigglePrivacy, DiggleTerms, DiggleLicense, DiggleCopyright } from './DigglePolicies';
 import { VortaPrivacy, VortaTerms, VortaLicense, VortaCopyright } from './VortaPolicies';
 
 type PolicyComponent = React.FC<{ appName: string; email: string }>;
@@ -19,10 +19,12 @@ const registry: Record<string, PolicyRegistryItem> = {
     terms: LegitAiTerms
   },
   'diggle': {
+    // /diggle/* renders these with the Diggle theme (src/diggle/legal/);
+    // the text itself lives in diggleDocuments.tsx.
     privacy: DigglePrivacy,
-    // Diggle uses standard terms (optional, or create DiggleTerms if needed)
-    license: DiggleLicense,     // Maps to specific file
-    copyright: DiggleCopyright  // Maps to specific file
+    terms: DiggleTerms,
+    license: DiggleLicense,
+    copyright: DiggleCopyright
   },
   'vorta': {
     privacy: VortaPrivacy,

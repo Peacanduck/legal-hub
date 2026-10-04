@@ -58,9 +58,10 @@ export const apps: AppData[] = [
       discord: 'https://discord.gg/QH4uUfK2wR',
       x: 'https://x.com/DiggleOnSol'
     },
-    developerName: 'PeacanDuck',
-    contactEmail: 'support.diggle@proton.me',
-    lastUpdated: 'Febuary 3, 2026'
+    developerName: 'Py Digital',
+    contactEmail: 'fu.developer@gmail.com',
+    // Keep in step with DIGGLE_LEGAL.lastUpdated in src/policies/diggleDocuments.tsx.
+    lastUpdated: 'October 4, 2026'
   },
   {
     id: 'vorta',
