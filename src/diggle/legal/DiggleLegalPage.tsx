@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { DIGGLE_DOCS } from '../../policies/diggleDocuments';
 import { DIGGLE_LEGAL, DOC_ORDER, type DiggleDocType } from '../../policies/diggleLegal';
 import { Footer } from '../components/Footer';
+import { digglePath } from '../site';
 import { TopBar } from '../components/TopBar';
 import { usePageChrome } from '../components/usePageChrome';
 
@@ -14,7 +15,7 @@ import { usePageChrome } from '../components/usePageChrome';
 
 const docLinks = (current: DiggleDocType) =>
   DOC_ORDER.map((type) => (
-    <Link key={type} to={`/diggle/${type}`} aria-current={type === current ? 'page' : undefined}>
+    <Link key={type} to={digglePath(type)} aria-current={type === current ? 'page' : undefined}>
       {DIGGLE_DOCS[type].tab}
     </Link>
   ));
@@ -43,11 +44,11 @@ export const DiggleLegalPage = ({ type }: { type: DiggleDocType }) => {
       </a>
 
       <TopBar
-        brandHref="/diggle"
+        brandHref={digglePath()}
         navLabel="Legal documents"
         nav={docLinks(type)}
         actions={
-          <Link className="dg-wallet-btn" to="/diggle">
+          <Link className="dg-wallet-btn" to={digglePath()}>
             Back to Diggle
           </Link>
         }
@@ -115,7 +116,7 @@ export const DiggleLegalPage = ({ type }: { type: DiggleDocType }) => {
 
           <nav className="dg-legal-pager" aria-label="More legal documents">
             {prev ? (
-              <Link to={`/diggle/${prev}`}>
+              <Link to={digglePath(prev)}>
                 <span>Previous</span>
                 <strong>{DIGGLE_DOCS[prev].title}</strong>
               </Link>
@@ -123,12 +124,12 @@ export const DiggleLegalPage = ({ type }: { type: DiggleDocType }) => {
               <span />
             )}
             {next ? (
-              <Link to={`/diggle/${next}`} className="is-next">
+              <Link to={digglePath(next)} className="is-next">
                 <span>Next</span>
                 <strong>{DIGGLE_DOCS[next].title}</strong>
               </Link>
             ) : (
-              <Link to="/diggle" className="is-next">
+              <Link to={digglePath()} className="is-next">
                 <span>Done</span>
                 <strong>Back to Diggle</strong>
               </Link>

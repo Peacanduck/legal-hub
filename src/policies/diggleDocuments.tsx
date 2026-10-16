@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ExternalLink as Ext, MailLink } from './LegalLinks';
 import { DIGGLE_LEGAL, type DiggleDocType, type LegalDocument } from './diggleLegal';
+import { digglePath } from '../diggle/site';
 
 // Diggle's legal documents, as data (types and dates: diggleLegal.ts).
 // Two renderers read this:
@@ -436,7 +437,7 @@ const terms: LegalDocument = {
         mint. By playing, signing in or minting, you accept them. If you don't accept them, don't use Diggle.
       </p>
       <p>
-        Our <Link to="/diggle/privacy">Privacy Policy</Link> explains what Diggle collects and who receives it. It forms
+        Our <Link to={digglePath('privacy')}>Privacy Policy</Link> explains what Diggle collects and who receives it. It forms
         part of these terms.
       </p>
     </>
@@ -718,7 +719,7 @@ const terms: LegalDocument = {
       body: (
         <p>
           You may stop using Diggle at any time, and ask us to delete your account as described in the{' '}
-          <Link to="/diggle/privacy">Privacy Policy</Link>. We may suspend or end your access if you materially break
+          <Link to={digglePath('privacy')}>Privacy Policy</Link>. We may suspend or end your access if you materially break
           these terms, in particular section 4. Diggle Machines in your wallet stay yours either way. Sections 5, 7,
           8, 12, 13, 14 and 16 survive the end of this agreement.
         </p>
@@ -768,7 +769,7 @@ const license: LegalDocument = {
   lede: (
     <p>
       This End User License Agreement is between you and <strong>{COMPANY}</strong> for the Diggle mobile game (
-      <code>{PACKAGE_ID}</code>). It supplements the <Link to="/diggle/terms">Terms &amp; Conditions</Link>, which
+      <code>{PACKAGE_ID}</code>). It supplements the <Link to={digglePath('terms')}>Terms &amp; Conditions</Link>, which
       win if the two conflict.
     </p>
   ),
@@ -808,7 +809,7 @@ const license: LegalDocument = {
       body: (
         <p>
           XP, points, in-game cash and other in-game items have no monetary value and can't be sold, transferred or
-          redeemed for money. Section 5 of the <Link to="/diggle/terms">Terms &amp; Conditions</Link> sets this out in
+          redeemed for money. Section 5 of the <Link to={digglePath('terms')}>Terms &amp; Conditions</Link> sets this out in
           full.
         </p>
       ),
@@ -819,7 +820,7 @@ const license: LegalDocument = {
       body: (
         <p>
           Owning a Diggle Machine gives you a personal, non-commercial licence to display its artwork, described in
-          section 7 of the <Link to="/diggle/terms">Terms &amp; Conditions</Link>. It doesn't transfer copyright.
+          section 7 of the <Link to={digglePath('terms')}>Terms &amp; Conditions</Link>. It doesn't transfer copyright.
         </p>
       ),
     },
@@ -897,7 +898,7 @@ const copyright: LegalDocument = {
       body: (
         <p>
           Owning a Diggle Machine means owning that token. {COMPANY} keeps the copyright in its artwork; holders get the
-          personal-use licence set out in section 7 of the <Link to="/diggle/terms">Terms &amp; Conditions</Link>. You
+          personal-use licence set out in section 7 of the <Link to={digglePath('terms')}>Terms &amp; Conditions</Link>. You
           don't need to own a Diggle Machine to play Diggle.
         </p>
       ),

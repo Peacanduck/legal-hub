@@ -9,12 +9,30 @@
       "headers": [{ "key": "Content-Type", "value": "image/png" }]
     }
   ],
+  "redirects": [
+    {
+      "source": "/diggle",
+      "has": [{ "type": "host", "value": "www.pydigital.xyz" }],
+      "destination": "https://diggle.pydigital.xyz/",
+      "permanent": false
+    },
+    {
+      "source": "/diggle/:doc(privacy|terms|license|copyright)",
+      "has": [{ "type": "host", "value": "www.pydigital.xyz" }],
+      "destination": "https://diggle.pydigital.xyz/:doc",
+      "permanent": false
+    }
+  ],
   "rewrites": [
-    { "source": "/(.*)diggle-icon.png", "destination": "/diggle-icon.png" },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "diggle.pydigital.xyz" }],
+      "destination": "/diggle.html"
+    },
     { "source": "/diggle", "destination": "/diggle.html" },
     { "source": "/diggle/:path*", "destination": "/diggle.html" },
     { "source": "/vorta", "destination": "/vorta.html" },
     { "source": "/vorta/:path*", "destination": "/vorta.html" },
-    { "source": "/(.*)", "destination": "/" }
+    { "source": "/(.*)", "destination": "/hub.html" }
   ]
 }

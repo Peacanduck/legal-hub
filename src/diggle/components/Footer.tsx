@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { LINKS } from '../config';
+import { HUB_HREF, digglePath } from '../site';
 
 export const Footer = () => (
   <footer className="dg-footer">
@@ -7,15 +8,15 @@ export const Footer = () => (
       <div>
         <p className="dg-brand">Diggle</p>
         <p className="dg-fine">
-          A <Link to="/">Py Digital</Link> game. Diggle Machines are in-game gear; nothing here is an offer of
+          A <a href={HUB_HREF}>Py Digital</a> game. Diggle Machines are in-game gear; nothing here is an offer of
           financial return.
         </p>
       </div>
       <nav aria-label="Legal">
-        <Link to="/diggle/privacy">Privacy</Link>
-        <Link to="/diggle/terms">Terms</Link>
-        <Link to="/diggle/license">License</Link>
-        <Link to="/diggle/copyright">Copyright</Link>
+        <Link to={digglePath('privacy')}>Privacy</Link>
+        <Link to={digglePath('terms')}>Terms</Link>
+        <Link to={digglePath('license')}>License</Link>
+        <Link to={digglePath('copyright')}>Copyright</Link>
       </nav>
       <nav aria-label="Community">
         <a href={LINKS.x} target="_blank" rel="noreferrer">
