@@ -3,6 +3,10 @@
     {
       "source": "/(diggle/)?.well-known/assetlinks.json",
       "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "source": "/favicon.ico",
+      "headers": [{ "key": "Content-Type", "value": "image/png" }]
     }
   ],
   "rewrites": [
