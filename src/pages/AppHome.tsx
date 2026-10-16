@@ -1,9 +1,11 @@
 import { useParams, Link, Navigate } from 'react-router-dom';
 import { getAppById } from '../data/apps';
+import { useFavicon } from '../hooks/useFavicon';
 
 export const AppHome = () => {
   const { appId } = useParams();
   const app = getAppById(appId);
+  useFavicon(app?.favicon);
 
   if (!app) return <Navigate to="/" replace />;
 

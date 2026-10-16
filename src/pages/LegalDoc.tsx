@@ -1,5 +1,6 @@
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { getAppById } from '../data/apps';
+import { useFavicon } from '../hooks/useFavicon';
 import { getPolicyComponent } from '../policies/registry';
 
 type DocType = 'privacy' | 'terms' | 'license' | 'copyright';
@@ -7,6 +8,7 @@ type DocType = 'privacy' | 'terms' | 'license' | 'copyright';
 export const LegalDoc = ({ type }: { type: DocType }) => {
   const { appId } = useParams();
   const app = getAppById(appId);
+  useFavicon(app?.favicon);
 
   // 1. Validation: Does the app exist?
   if (!app) return <Navigate to="/" replace />;

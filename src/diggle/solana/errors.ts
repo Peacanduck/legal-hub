@@ -14,7 +14,28 @@ const messageOf = (e: unknown): string => {
   }
 };
 
+// A failed pre-sign simulation (MintCheckError in mint.ts, matched by name so
+// this module doesn't pull the Metaplex mint code into the page bundle).
+// Nothing reached the wallet, so every message says so.
+function describeCheckFailure(m: string): string {
+  const notOpened = 'Your wallet wasn’t asked to sign anything.';
+  if (/insufficient (funds|lamports)|InsufficientFundsForFee|AccountNotFound|NotEnoughSOL|not enough sol|debit an account/i.test(m)) {
+    return `This wallet doesn’t have enough SOL for the price, rent and network fee. ${notOpened}`;
+  }
+  if (/mint ?limit|maximum.*mint|MintLimit/i.test(m)) return `This wallet has reached its mint limit. ${notOpened}`;
+  if (/sold ?out|NotEnoughItems|CandyMachineEmpty|machine is empty|MaximumRedeemedAmount/i.test(m)) {
+    return `Sold out — every machine has been claimed. ${notOpened}`;
+  }
+  if (/not live|MintNotLive|start ?date|AfterEndDate|end date/i.test(m)) return `Minting is not open right now. ${notOpened}`;
+  if (/BotTax/.test(m)) {
+    return `The candy machine would reject this mint and charge its bot tax, so it was stopped before signing. ${notOpened}`;
+  }
+  return `This mint would fail on-chain (${m.slice(0, 120)}). ${notOpened}`;
+}
+
 export function describeMintError(e: unknown): string {
+  if (e instanceof Error && e.name === 'MintCheckError') return describeCheckFailure(e.message);
+
   const m = messageOf(e);
 
   if (/reject|denied|declin|cancel/i.test(m)) return 'Cancelled in your wallet. Nothing was charged.';

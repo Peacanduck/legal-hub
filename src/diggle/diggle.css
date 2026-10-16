@@ -416,6 +416,20 @@ html:has(body.dg-page) { scroll-behavior: smooth; }
 .dg-result-list a:hover { text-decoration: underline; }
 .dg-result .dg-btn { margin-top: 1rem; width: 100%; }
 
+/* Review before signing: every cost and the recipient, from a simulation. */
+.dg-review-head { font-family: var(--dg-pixel-font); font-size: .625rem; letter-spacing: .08em; text-transform: uppercase; color: var(--dg-ink-3); }
+.dg-review-list { margin: .5rem 0 0; border: 1px solid var(--dg-seam); }
+.dg-review-list > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: .2rem 1rem; padding: .5rem .7rem; }
+.dg-review-list > div + div { border-top: 1px solid var(--dg-seam); }
+.dg-review-list dt { font-size: .875rem; color: var(--dg-ink-2); }
+.dg-review-list dd { text-align: right; font-variant-numeric: tabular-nums; }
+.dg-review-list dd a { color: var(--dg-gold); }
+.dg-review-list dd a:hover { text-decoration: underline; }
+.dg-review-sub { display: block; font-size: .75rem; color: var(--dg-ink-3); }
+.dg-review-total { background: var(--dg-rock); }
+.dg-review-total dt, .dg-review-total dd { font-family: var(--dg-display); font-weight: 800; font-size: 1.1rem; color: var(--dg-ink); }
+.dg-review-actions { display: grid; gap: .5rem; margin-top: 1rem; }
+
 /* ── Bands (sections below the surface) ──────────────────────── */
 .dg-band { position: relative; padding: var(--dg-step) 0; background: var(--dg-shaft); }
 .dg-band--run { background: #0f0f1a; }

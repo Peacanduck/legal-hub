@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.example.diggle",
+      "sha256_cert_fingerprints": [
+        "F4:79:F3:86:C8:8E:77:76:CE:5A:1D:F5:C2:15:FE:A9:8A:DA:E1:32:2F:D9:47:4A:0A:BE:22:4C:2C:CD:B6:AF"
+      ]
+    }
+  }
+]

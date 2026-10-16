@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { CLUSTER, MINT_OVERHEAD_SOL, NETWORK, RPC_HOST, explorer } from '../config';
 import { loadWalletMintInfo, type CandyState, type WalletMintInfo } from '../solana/candyState';
-import type { MintOutcome, MintStage } from '../solana/mint';
+import type { MintOutcome, MintQuote, MintStage, PreparedMint } from '../solana/mint';
 import { describeMintError } from '../solana/errors';
 import { shortAddress } from '../format';
 
@@ -13,11 +13,13 @@ const loadMint = () => import('../solana/mint');
 type Phase =
   | { kind: 'idle' }
   | { kind: 'working'; stage: MintStage }
+  /** Checked and priced; waiting for the player to approve in their wallet. */
+  | { kind: 'review'; prepared: PreparedMint; owner: string; qty: number }
   | { kind: 'done'; outcomes: MintOutcome[] }
   | { kind: 'error'; message: string };
 
 const STAGE_LABEL: Record<MintStage, string> = {
-  preparing: 'Preparing transaction…',
+  preparing: 'Checking the transaction…',
   approving: 'Approve in your wallet…',
   sending: 'Sending to Solana…',
   confirming: 'Confirming on-chain…',
@@ -27,6 +29,9 @@ const STAGE_LABEL: Record<MintStage, string> = {
 const MAX_BATCH = 3;
 
 const sol = (n: number) => `${Number(n.toFixed(4))} SOL`;
+
+/** Exact amounts for the review: fees are a few hundred-thousandths of a SOL. */
+const solExact = (lamports: bigint) => `${Number((Number(lamports) / 1e9).toFixed(6))} SOL`;
 
 const formatDate = (d: Date) =>
   d.toLocaleString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
@@ -99,18 +104,31 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
   const needed = qty * (price + MINT_OVERHEAD_SOL);
   const insufficient = !!walletInfo && walletInfo.balanceSol < needed;
   const working = phase.kind === 'working';
+  // A review is only good for the wallet and quantity it was priced for.
+  const review = phase.kind === 'review' && phase.owner === address && phase.qty === qty ? phase : null;
 
-  const doMint = async () => {
-    if (!state) return;
+  // Step 1: build and simulate. Nothing reaches the wallet unless the
+  // simulation says the mint succeeds, and the player sees every cost first.
+  const reviewMint = async () => {
+    if (!state || !address) return;
     setPhase({ kind: 'working', stage: 'preparing' });
     try {
-      const { mintMachines } = await loadMint();
-      const outcomes = await mintMachines({
-        wallet,
-        state,
-        quantity: qty,
-        onStage: (stage) => setPhase({ kind: 'working', stage }),
-      });
+      const { prepareMint } = await loadMint();
+      const prepared = await prepareMint({ wallet, state, quantity: qty });
+      setPhase({ kind: 'review', prepared, owner: address, qty });
+    } catch (e) {
+      setPhase({ kind: 'error', message: describeMintError(e) });
+      void refresh();
+      void refreshInfo();
+    }
+  };
+
+  // Step 2: the player approved the review; now ask the wallet.
+  const approve = async (prepared: PreparedMint) => {
+    setPhase({ kind: 'working', stage: 'preparing' });
+    try {
+      const { approveMint } = await loadMint();
+      const outcomes = await approveMint(prepared, (stage) => setPhase({ kind: 'working', stage }));
       setPhase({ kind: 'done', outcomes });
     } catch (e) {
       setPhase({ kind: 'error', message: describeMintError(e) });
@@ -154,8 +172,9 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
     };
   } else {
     action = {
-      label: `Mint ${qty === 1 ? 'a machine' : `${qty} machines`} · ${sol(qty * price)}`,
-      onClick: () => void doMint(),
+      label: `Review ${qty === 1 ? 'mint' : `${qty} mints`} · ${sol(qty * price)}`,
+      onClick: () => void reviewMint(),
+      note: 'Shows the price, rent, network fee and recipient before your wallet opens.',
     };
   }
 
@@ -267,15 +286,23 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
             </div>
           )}
 
-          <button
-            type="button"
-            className={`dg-btn dg-btn--primary dg-btn--xl${working ? ' is-working' : ''}`}
-            onClick={action.onClick}
-            disabled={!action.onClick}
-          >
-            {action.label}
-          </button>
-          {action.note &&
+          {review ? (
+            <MintReview
+              quote={review.prepared.quote}
+              onApprove={() => void approve(review.prepared)}
+              onCancel={() => setPhase({ kind: 'idle' })}
+            />
+          ) : (
+            <button
+              type="button"
+              className={`dg-btn dg-btn--primary dg-btn--xl${working ? ' is-working' : ''}`}
+              onClick={action.onClick}
+              disabled={!action.onClick}
+            >
+              {action.label}
+            </button>
+          )}
+          {!review && action.note &&
             (action.isError ? (
               <p className="dg-console-error" role="alert">
                 {action.note}
@@ -316,6 +343,69 @@ export const MintConsole = ({ candy, openWallet }: { candy: CandyFeed; openWalle
     </div>
   );
 };
+
+const MintReview = ({
+  quote,
+  onApprove,
+  onCancel,
+}: {
+  quote: MintQuote;
+  onApprove: () => void;
+  onCancel: () => void;
+}) => (
+  <div className="dg-review">
+    <p className="dg-review-head">Review before you sign</p>
+    <dl className="dg-review-list">
+      <div>
+        <dt>You receive</dt>
+        <dd>
+          {quote.quantity === 1 ? '1 sealed Diggle Machine NFT' : `${quote.quantity} sealed Diggle Machine NFTs`}
+        </dd>
+      </div>
+      <div>
+        <dt>Price</dt>
+        <dd>
+          {solExact(quote.price)}
+          {quote.destination && (
+            <span className="dg-review-sub">
+              to{' '}
+              <a href={explorer.account(quote.destination)} target="_blank" rel="noreferrer" className="dg-mono">
+                {shortAddress(quote.destination)}
+              </a>
+            </span>
+          )}
+        </dd>
+      </div>
+      <div>
+        <dt>NFT account rent</dt>
+        <dd>
+          {solExact(quote.rent)}
+          <span className="dg-review-sub">held in the new NFT’s accounts</span>
+        </dd>
+      </div>
+      <div>
+        <dt>Network fee</dt>
+        <dd>{solExact(quote.fee)}</dd>
+      </div>
+      <div className="dg-review-total">
+        <dt>Total</dt>
+        <dd>{solExact(quote.total)}</dd>
+      </div>
+    </dl>
+    <p className="dg-console-note">
+      Simulated just now: {quote.quantity === 1 ? 'this mint succeeds' : 'each mint succeeds'} and won’t trigger the
+      candy machine’s bot tax. Your wallet should show the same total.
+    </p>
+    <div className="dg-review-actions">
+      <button type="button" className="dg-btn dg-btn--primary dg-btn--xl" onClick={onApprove}>
+        Approve in wallet
+      </button>
+      <button type="button" className="dg-btn dg-btn--ghost" onClick={onCancel}>
+        Cancel
+      </button>
+    </div>
+  </div>
+);
 
 const MintResult = ({ outcomes, onAgain }: { outcomes: MintOutcome[]; onAgain: () => void }) => {
   const minted = outcomes.filter((o) => o.status === 'minted');

@@ -1,8 +1,14 @@
 import { useEffect } from 'react';
+import { getAppById } from '../../data/apps';
+import { useFavicon } from '../../hooks/useFavicon';
 
-/** Sets the tab title and the body marker class (`dg-page`) for a Diggle
- *  page, restoring both when the page unmounts. */
+const DIGGLE_FAVICON = getAppById('diggle')?.favicon;
+
+/** Sets the tab title, the Diggle tab icon and the body marker class
+ *  (`dg-page`) for a Diggle page, restoring all three when the page unmounts. */
 export function usePageChrome(title: string) {
+  useFavicon(DIGGLE_FAVICON);
+
   useEffect(() => {
     const previous = document.title;
     document.title = title;

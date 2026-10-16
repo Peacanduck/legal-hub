@@ -8,6 +8,7 @@ export interface AppData {
   link?: string;          // Link to App Store/Play Store/Web
   banner?: string;        // Hero image for the landing page
   logo?: string;          // Square logo/icon for the project
+  favicon?: string;       // Tab icon on the app's pages (small square PNG)
   socials?: {             // Social media community links
     discord?: string;
     x?: string;
@@ -54,6 +55,9 @@ export const apps: AppData[] = [
     // Reference the images placed in your public/ directory
     banner: '/DiggleBannerLong.png',
     logo: '/diggle/collection.png',
+    // Same art as the game's launcher icon. Wallets show it too: the game's
+    // Mobile Wallet Adapter identity points at /diggle with this icon.
+    favicon: '/diggle-icon.png',
     socials: {
       discord: 'https://discord.gg/QH4uUfK2wR',
       x: 'https://x.com/DiggleOnSol'
@@ -80,6 +84,7 @@ export const apps: AppData[] = [
     link: '#', // Play Store link — swap in once the listing is live
     banner: '/VortaFeature1024x500.png',
     logo: '/VortaIcon1024.png',
+    favicon: '/vorta-icon.png',
     socials: {
       discord: '',
       x: ''
