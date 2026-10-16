@@ -10,6 +10,7 @@
     }
   ],
   "rewrites": [
+    { "source": "/(.*)diggle-icon.png", "destination": "/diggle-icon.png" },
     { "source": "/diggle", "destination": "/diggle.html" },
     { "source": "/diggle/:path*", "destination": "/diggle.html" },
     { "source": "/vorta", "destination": "/vorta.html" },
