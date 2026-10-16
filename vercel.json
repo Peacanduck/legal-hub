@@ -25,6 +25,11 @@
   ],
   "rewrites": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "diggle.pydigital.xyz" }],
+      "destination": "/diggle.html"
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "diggle.pydigital.xyz" }],
       "destination": "/diggle.html"
