@@ -1,26 +1,26 @@
 import { useParams, Navigate, Link } from 'react-router-dom';
 import { getAppById } from '../data/apps';
-import { useFavicon } from '../hooks/useFavicon';
+import { usePageHead } from '../hooks/usePageHead';
 import { getPolicyComponent } from '../policies/registry';
 
 type DocType = 'privacy' | 'terms' | 'license' | 'copyright';
 
+const DOC_TITLES: Record<DocType, string> = {
+  privacy: 'Privacy Policy',
+  terms: 'Terms & Conditions',
+  license: 'License Agreement',
+  copyright: 'Copyright Notice',
+};
+
 export const LegalDoc = ({ type }: { type: DocType }) => {
   const { appId } = useParams();
   const app = getAppById(appId);
-  useFavicon(app?.favicon);
+  const title = DOC_TITLES[type];
+  usePageHead({ icon: app?.favicon, title: app ? `${title} — ${app.name}` : undefined });
 
   // 1. Validation: Does the app exist?
   if (!app) return <Navigate to="/" replace />;
 
-  let title = '';
-  switch(type) {
-    case 'privacy': title = 'Privacy Policy'; break;
-    case 'terms': title = 'Terms & Conditions'; break;
-    case 'license': title = 'License Agreement'; break;
-    case 'copyright': title = 'Copyright Notice'; break;
-  }
-  
   // 2. Dynamic Content Retrieval: Get the correct component for this specific app
   const PolicyContent = getPolicyComponent(app.id, type);
   

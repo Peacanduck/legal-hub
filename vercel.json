@@ -5,5 +5,11 @@
       "headers": [{ "key": "Content-Type", "value": "application/json" }]
     }
   ],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    { "source": "/diggle", "destination": "/diggle.html" },
+    { "source": "/diggle/:path*", "destination": "/diggle.html" },
+    { "source": "/vorta", "destination": "/vorta.html" },
+    { "source": "/vorta/:path*", "destination": "/vorta.html" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }
