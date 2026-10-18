@@ -16,14 +16,32 @@ const DiggleLegalPage = lazy(() =>
   import('./diggle/legal/DiggleLegalPage').then((m) => ({ default: m.DiggleLegalPage })),
 );
 
+// Vorta's pages are full-bleed too, and lazy for the same reason: the
+// landing page's canvas demo, and the fonts both pages share, load only on
+// /vorta. The legal pages never load the demo.
+const VortaPage = lazy(() => import('./vorta/VortaPage').then((m) => ({ default: m.VortaPage })));
+const VortaLegalPage = lazy(() =>
+  import('./vorta/legal/VortaLegalPage').then((m) => ({ default: m.VortaLegalPage })),
+);
+
 const DIGGLE_LEGAL_TYPES = ['privacy', 'terms', 'license', 'copyright'] as const;
 type DiggleLegalType = (typeof DIGGLE_LEGAL_TYPES)[number];
+
+const VORTA_LEGAL_TYPES = ['privacy', 'terms', 'license', 'copyright'] as const;
 
 const diggleFallback = <div style={{ minHeight: '100vh', background: '#0b0b14' }} />;
 
 const digglePage = (
   <Suspense fallback={diggleFallback}>
     <DigglePage />
+  </Suspense>
+);
+
+const vortaFallback = <div style={{ minHeight: '100vh', background: '#05040f' }} />;
+
+const vortaPage = (
+  <Suspense fallback={vortaFallback}>
+    <VortaPage />
   </Suspense>
 );
 
@@ -69,6 +87,21 @@ const HubSite = () => (
         key={type}
         path={`/diggle/${type}`}
         element={ON_HUB_HOST ? <LeaveFor url={`${DIGGLE_ORIGIN}/${type}`} /> : diggleLegalPage(type)}
+      />
+    ))}
+
+    {/* Explicit paths outrank /:appId and /:appId/privacy etc. below, which
+        would put Vorta's pages inside the hub's Layout. */}
+    <Route path="/vorta" element={vortaPage} />
+    {VORTA_LEGAL_TYPES.map((type) => (
+      <Route
+        key={`/vorta/${type}`}
+        path={`/vorta/${type}`}
+        element={
+          <Suspense fallback={vortaFallback}>
+            <VortaLegalPage type={type} />
+          </Suspense>
+        }
       />
     ))}
 

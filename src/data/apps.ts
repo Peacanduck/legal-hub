@@ -72,6 +72,8 @@ export const apps: AppData[] = [
     name: 'Vorta: Orbital Arcade',
     type: 'game',
     tagline: 'One tap to reverse. Thread the closing rings.',
+    // /vorta renders its own page (src/vorta/); these fields feed the
+    // Py Digital home card and the legal pages.
     description: 'Vorta is a one-thumb arcade game about threading impossible gaps. You orbit a glowing core while rings close in from the dark, each carrying a gap you have to find. Tap anywhere to reverse your direction — that is the entire control scheme. Motes drifting between the rings build a combo multiplier that decays in three and a half seconds, so playing it safe bleeds your score away and chasing every mote gets you killed. A run lasts about thirty seconds. Your best one will haunt you for longer.',
     features: [
       'One-tap controls — the entire game is a single input',
@@ -81,7 +83,7 @@ export const apps: AppData[] = [
       'Fair by construction — every ring is verified reachable',
       'Optional Remove Ads upgrade'
     ],
-    link: '#', // Play Store link — swap in once the listing is live
+    link: 'https://play.google.com/store/apps/details?id=com.pyrolabs.vorta',
     banner: '/VortaFeature1024x500.png',
     logo: '/VortaIcon1024.png',
     favicon: '/vorta-icon.png',
@@ -91,7 +93,8 @@ export const apps: AppData[] = [
     },
     developerName: 'Py Digital',
     contactEmail: 'fu.developer@gmail.com',
-    lastUpdated: 'September 1, 2026'
+    // Keep in step with EFFECTIVE_DATE in src/policies/VortaPolicies.tsx.
+    lastUpdated: 'September 4, 2026'
   }
 ];
 
