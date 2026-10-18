@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 
 // The site-wide head from index.html. Pages put these back when they unmount.
-const SITE_TITLE = 'Py Digital';
-const SITE_ICON = '/vite.svg';
+const SITE_TITLE = 'Py Digital — Independent games and apps';
+const SITE_ICON = '/pydigital-mark.svg';
 
 const TYPES: Record<string, string> = {
   svg: 'image/svg+xml',
