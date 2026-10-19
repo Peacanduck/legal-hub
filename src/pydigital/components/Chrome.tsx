@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { SHOWCASE, STUDIO_EMAIL, appHref, shortName } from '../content';
+import { SHOWCASE, STUDIO_EMAIL, shortName } from '../content';
 import { useScrolled } from '../hooks';
 import { Mark } from './Pixels';
 
@@ -26,6 +26,7 @@ export const TopBar = () => {
           <span>Py Digital</span>
         </a>
         <nav className="pd-nav" aria-label="Page">
+          <a href="#studio">Studio</a>
           <a href="#work">Work</a>
           <a href="#principles">Principles</a>
           <a href="#legal">Legal</a>
@@ -46,22 +47,26 @@ export const Footer = () => (
           <Mark size={24} />
           <span>Py Digital</span>
         </p>
-        <p className="pd-fine">Independent games and apps, built all the way down.</p>
+        <p className="pd-fine">Games, smart contracts and DeFi, built all the way down.</p>
       </div>
       <nav aria-label="Projects">
         <p className="pd-footer-head">Projects</p>
-        {SHOWCASE.map(({ app }) => (
-          <SmartLink key={app.id} to={appHref(app.id)}>
-            {shortName(app)}
+        {SHOWCASE.map((p) => (
+          <SmartLink key={p.id} to={p.href}>
+            {shortName(p.name)}
           </SmartLink>
         ))}
       </nav>
       <nav aria-label="Studio">
         <p className="pd-footer-head">Studio</p>
+        <a href="#studio">What we build</a>
         <a href="#principles">How we build</a>
         <a href="#legal">Legal documents</a>
         <a href={`mailto:${STUDIO_EMAIL}`}>Email us</a>
       </nav>
+    </div>
+    <div className="pd-wrap">
+      <p className="pd-footer-note">Nothing on this site is financial advice or an offer to invest.</p>
     </div>
     <div className="pd-wrap pd-footer-base">
       <p>&copy; {new Date().getFullYear()} Py Digital. All rights reserved.</p>

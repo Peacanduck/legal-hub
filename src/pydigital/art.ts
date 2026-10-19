@@ -24,9 +24,9 @@ export const MARK_TONES: Record<string, string> = {
   '4': '#ffd88a',
 };
 
-export type GlyphName = 'one' | 'fair' | 'less';
+export type GlyphName = 'one' | 'fair' | 'less' | 'play' | 'code' | 'ring' | 'chart';
 
-/** One glyph per principle, in the mark's pixels. */
+/** One glyph per principle and per practice, in the mark's pixels. */
 export const GLYPHS: Record<GlyphName, string[]> = {
   // One lit pixel in a field of dim ones.
   one: [
@@ -63,6 +63,54 @@ export const GLYPHS: Record<GlyphName, string[]> = {
     '..2...2..',
     '...2.2...',
     '....2....',
+  ],
+  // Play.
+  play: [
+    '..2......',
+    '..22.....',
+    '..222....',
+    '..2222...',
+    '..22223..',
+    '..2222...',
+    '..222....',
+    '..22.....',
+    '..2......',
+  ],
+  // Braces round a lit pixel.
+  code: [
+    '..22.22..',
+    '..2...2..',
+    '..2...2..',
+    '..2...2..',
+    '.2..3..2.',
+    '..2...2..',
+    '..2...2..',
+    '..2...2..',
+    '..22.22..',
+  ],
+  // A ring with a spark dropping into its gap, after Solignition's mark.
+  ring: [
+    '...2.2...',
+    '.22.3.22.',
+    '.2..3..2.',
+    '2.......2',
+    '2.......2',
+    '2.......2',
+    '.2.....2.',
+    '.22...22.',
+    '...222...',
+  ],
+  // A price line over its axis, the latest point lit.
+  chart: [
+    '1........',
+    '1......3.',
+    '1.....2..',
+    '1.2..2...',
+    '1.22.2...',
+    '12..2....',
+    '1........',
+    '1........',
+    '111111111',
   ],
 };
 

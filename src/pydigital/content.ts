@@ -3,10 +3,10 @@ import { DIGGLE_ORIGIN, ON_HUB_HOST } from '../diggle/site';
 import type { GlyphName } from './art';
 
 // Copy and data for the Py Digital home page. Every claim it makes about a
-// product is one that product's own page or policy already makes
-// (src/vorta/content.ts, src/diggle/content.ts, src/policies/). The studio
-// page repeats those claims and never adds to them, so change a number at
-// its source first.
+// product is one that product's own page, site or policy already makes
+// (src/vorta/content.ts, src/diggle/content.ts, src/policies/, and
+// solignition.xyz for Solignition). The studio page repeats those claims and
+// never adds to them, so change a number at its source first.
 
 /** The address the studio's games publish for support (src/data/apps.ts). */
 export const STUDIO_EMAIL = 'fu.developer@gmail.com';
@@ -25,36 +25,54 @@ export const DOCS: { type: DocType; label: string }[] = [
 const offsite = (id: string) => id === 'diggle' && ON_HUB_HOST;
 
 /** An app's own page: a router path, or an absolute URL on another origin. */
-export const appHref = (id: string) => (offsite(id) ? `${DIGGLE_ORIGIN}/` : `/${id}`);
+const appHref = (id: string) => (offsite(id) ? `${DIGGLE_ORIGIN}/` : `/${id}`);
 
 /** One of an app's legal documents. */
 export const docHref = (id: string, doc: DocType) => (offsite(id) ? `${DIGGLE_ORIGIN}/${doc}` : `/${id}/${doc}`);
 
 /** "Vorta: Orbital Arcade" is "Vorta" in a label. */
-export const shortName = (app: AppData) => app.name.split(':')[0];
+export const shortName = (name: string) => name.split(':')[0];
 
-export type Scene = 'vorta' | 'diggle' | 'legitai';
+export type Scene = 'vorta' | 'diggle' | 'solignition' | 'legitai';
 
-export interface Showcase {
-  app: AppData;
+export interface Link {
+  href: string;
+  label: string;
+}
+
+/** Anything on the studio page: an app from src/data/apps.ts, whose legal
+ *  documents this site hosts, or a project with a site of its own. */
+export interface Project {
+  id: string;
+  name: string;
   kind: string;
   platform?: string;
-  /** The app's tagline, shortened where the card needs it. */
+  /** Where it stands, when that is not simply "out". */
+  status?: string;
   tagline?: string;
   summary: string;
   stats: { value: string; label: string }[];
-  /** A store listing, next to the link to the app's own page. */
-  store?: { href: string; label: string };
-  /** The window beside the copy. Apps without one show their art. */
+  /** Its own page: a router path, or an absolute URL. */
+  href: string;
+  /** Store listings, docs: beside the link to its page, in a new tab. */
+  links: Link[];
+  socials: Link[];
+  /** The window beside the copy. A project without one shows its art. */
   scene?: Scene;
   /** Live scenes run the product's own code; the rest say what they are. */
   live?: boolean;
   caption?: string;
+  art?: { banner?: string; logo?: string };
   /** Glow under the window, and the stat figures. */
   accent: string;
 }
 
-type Presentation = Omit<Showcase, 'app'>;
+type Presentation = Omit<Project, 'id' | 'name' | 'href' | 'socials'> & { socials?: Link[] };
+
+const socialsOf = (app: AppData): Link[] => [
+  ...(app.socials?.x ? [{ href: app.socials.x, label: `${shortName(app.name)} on X` }] : []),
+  ...(app.socials?.discord ? [{ href: app.socials.discord, label: `${shortName(app.name)} on Discord` }] : []),
+];
 
 const PRESENTATION: Record<string, (app: AppData) => Presentation> = {
   vorta: (app) => ({
@@ -69,7 +87,7 @@ const PRESENTATION: Record<string, (app: AppData) => Presentation> = {
       { value: '120 Hz', label: 'fixed-step physics' },
       { value: '7', label: 'skins that repaint it all' },
     ],
-    store: app.link?.startsWith('http') ? { href: app.link, label: 'Google Play' } : undefined,
+    links: app.link?.startsWith('http') ? [{ href: app.link, label: 'Google Play' }] : [],
     scene: 'vorta',
     live: true,
     caption: 'The game’s rules, on autopilot',
@@ -89,6 +107,7 @@ const PRESENTATION: Record<string, (app: AppData) => Presentation> = {
     ],
     // Its store link is a dApp Store deep link that only opens on a Seeker
     // or Saga, so it stays on the Diggle page, which explains that.
+    links: [],
     scene: 'diggle',
     live: true,
     caption: 'Sprites from the game’s sheets',
@@ -106,6 +125,7 @@ const PRESENTATION: Record<string, (app: AppData) => Presentation> = {
       { value: 'Score', label: 'how likely it is to be a scam' },
       { value: 'Discard', label: 'the text once it is checked' },
     ],
+    links: [],
     scene: 'legitai',
     live: false,
     caption: 'An illustration of a risk check',
@@ -113,28 +133,105 @@ const PRESENTATION: Record<string, (app: AppData) => Presentation> = {
   }),
 };
 
-// What's out comes first.
-const ORDER = ['vorta', 'diggle', 'legitai'];
-const rank = (id: string) => (ORDER.includes(id) ? ORDER.indexOf(id) : ORDER.length);
-
 const plain = (app: AppData): Presentation => ({
   kind: app.type === 'game' ? 'Game' : 'App',
   tagline: app.tagline,
   summary: app.description ?? '',
   stats: [],
+  links: [],
+  art: { banner: app.banner, logo: app.logo },
   accent: '#ff6a2b',
 });
 
-/** Every app in src/data/apps.ts, so a new one appears here without a code
- *  change, with its art in the window until it gets a scene of its own. */
-export const SHOWCASE: Showcase[] = [...apps]
-  .sort((a, b) => rank(a.id) - rank(b.id))
-  .map((app) => ({ app, ...(PRESENTATION[app.id] ?? plain)(app) }));
+const fromApp = (app: AppData): Project => {
+  const p = (PRESENTATION[app.id] ?? plain)(app);
+  return { id: app.id, name: app.name, href: appHref(app.id), ...p, socials: p.socials ?? socialsOf(app) };
+};
 
-export const accentOf = (id: string) => SHOWCASE.find((s) => s.app.id === id)?.accent ?? '#ff6a2b';
+/** Solignition lives at solignition.xyz with its own terms, so it is not an
+ *  app this site hosts documents for. Its copy is from its own site and docs
+ *  links; its status is the one the site shows ("LIVE · DEVNET · v0.4.2"). */
+const SOLIGNITION: Project = {
+  id: 'solignition',
+  name: 'Solignition',
+  kind: 'DeFi lending protocol',
+  platform: 'Solana',
+  status: 'Live on devnet',
+  tagline: 'Deploy Solana programs without upfront capital.',
+  summary:
+    'Solignition lends builders the rent and fees it takes to deploy a program on Solana. A protocol-owned PDA holds the upgrade authority for the term of the loan, and repaying moves it to your wallet in the same transaction. Lenders deposit SOL and earn from loan interest. It is on devnet today, with a formal audit scheduled before mainnet.',
+  stats: [
+    { value: '2–6 SOL', label: 'a deploy’s upfront cost, lent' },
+    { value: '24 h', label: 'grace after a loan expires' },
+    { value: 'v0.4.2', label: 'live on devnet' },
+  ],
+  href: 'https://www.solignition.xyz/',
+  links: [{ href: 'https://docs.solignition.xyz', label: 'Docs' }],
+  socials: [{ href: 'https://x.com/Solignition', label: 'Solignition on X' }],
+  scene: 'solignition',
+  live: false,
+  caption: 'An illustration of a loan',
+  accent: '#56d57b',
+};
+
+// What's out comes first, games and the rest taking turns.
+const ORDER = ['vorta', 'solignition', 'diggle', 'legitai'];
+const rank = (id: string) => (ORDER.includes(id) ? ORDER.indexOf(id) : ORDER.length);
+const byOrder = <T extends { id: string }>(a: T, b: T) => rank(a.id) - rank(b.id);
+
+/** Every project, including every app in src/data/apps.ts, so a new app
+ *  appears without a code change, its art in the window until it gets a
+ *  scene of its own. */
+export const SHOWCASE: Project[] = [...apps.map(fromApp), SOLIGNITION].sort(byOrder);
+
+/** The apps whose legal documents this site hosts. */
+export const LEGAL_APPS: AppData[] = [...apps].sort(byOrder);
+
+export const projectById = (id: string) => SHOWCASE.find((p) => p.id === id);
+export const accentOf = (id: string) => projectById(id)?.accent ?? '#ff6a2b';
+
+/** The page's own anchor for a project's row in the work section. */
+export const projectAnchor = (id: string) => `#project-${id}`;
+
+export interface Practice {
+  title: string;
+  body: string;
+  glyph: GlyphName;
+  /** Projects that show the practice, by id. */
+  projects: string[];
+  status?: string;
+}
+
+export const PRACTICES: Practice[] = [
+  {
+    title: 'Games and apps',
+    body: 'Mobile games built around one idea, and apps that do one job well, from an orbital arcade game to an AI scam checker.',
+    glyph: 'play',
+    projects: ['vorta', 'diggle', 'legitai'],
+  },
+  {
+    title: 'Smart contracts',
+    body: 'Solana programs and the clients that talk to them: on-chain lending, NFT mints, and wallet flows that hold up on a phone.',
+    glyph: 'code',
+    projects: ['solignition', 'diggle'],
+  },
+  {
+    title: 'DeFi',
+    body: 'Protocols with their rules on-chain. Solignition lends the SOL to deploy a program, and holds no keys while it does.',
+    glyph: 'ring',
+    projects: ['solignition'],
+  },
+  {
+    title: 'Trading',
+    body: 'A proprietary trading firm, being set up now. There will be more to say here when it is ready.',
+    glyph: 'chart',
+    projects: [],
+    status: 'In formation',
+  },
+];
 
 export interface Receipt {
-  app: string;
+  project: string;
   text: string;
 }
 
@@ -151,30 +248,38 @@ export const PRINCIPLES: Principle[] = [
     body: 'Each project starts from one idea and is built out from there, so there is never more to learn than the idea needs.',
     glyph: 'one',
     receipts: [
-      { app: 'vorta', text: 'One tap reverses your orbit. That is the entire control scheme.' },
-      { app: 'diggle', text: 'Every descent is the same argument: fuel, hull, cargo. Pick two.' },
+      { project: 'vorta', text: 'One tap reverses your orbit. That is the entire control scheme.' },
+      { project: 'solignition', text: 'One job: front the SOL a deploy needs. Repay, and the program’s authority is yours.' },
+      { project: 'diggle', text: 'Every descent is the same argument: fuel, hull, cargo. Pick two.' },
     ],
   },
   {
     title: 'Fair by construction.',
-    body: 'We would rather prove a game is fair than ask you to trust that it is. If you lose, it should be because of something you did.',
+    body: 'We would rather prove a system is fair than ask you to take it on trust. The rules live in the code, where anyone can check them.',
     glyph: 'fair',
     receipts: [
       {
-        app: 'vorta',
+        project: 'vorta',
         text: 'Before a ring appears, the game checks that you can reach its gap. An autopilot plays the whole difficulty curve on every build.',
       },
-      { app: 'diggle', text: 'The weekly challenge runs on a standardized loadout, so nobody buys a leaderboard.' },
+      { project: 'diggle', text: 'The weekly challenge runs on a standardized loadout, so nobody buys a leaderboard.' },
+      {
+        project: 'solignition',
+        text: 'A default costs the deployed program and nothing more: after expiry and a 24-hour grace period, the protocol reclaims the rent to repay lenders.',
+      },
     ],
   },
   {
     title: 'Only what a feature needs.',
-    body: 'Data is a cost we try not to pass on. When something does leave your device, the policy says what, where and why.',
+    body: 'No more data, keys or permissions than the job takes. When something does leave your device, the policy says what, where and why.',
     glyph: 'less',
     receipts: [
-      { app: 'vorta', text: 'No account with us. Your progress lives on your device.' },
-      { app: 'legitai', text: 'Text you check is analysed, then discarded. It is never stored on our servers.' },
-      { app: 'diggle', text: 'No ads, and no analytics or tracking SDKs.' },
+      { project: 'vorta', text: 'No account with us. Your progress lives on your device.' },
+      { project: 'legitai', text: 'Text you check is analysed, then discarded. It is never stored on our servers.' },
+      {
+        project: 'solignition',
+        text: 'No keys held, no multi-sig. The protocol holds deployment authority for the loan’s term and no longer.',
+      },
     ],
   },
 ];

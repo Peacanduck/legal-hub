@@ -194,7 +194,9 @@ export const LegitAiScene = () => {
             <span />
           </li>
         </ol>
-        <span className="pd-scan-beam" />
+        <span className="pd-scan-clip">
+          <span className="pd-scan-beam" />
+        </span>
       </div>
 
       <div className="pd-scan-card" aria-hidden="true">
@@ -208,7 +210,14 @@ export const LegitAiScene = () => {
         </p>
         <p className="pd-scan-status">{status}</p>
         <span className="pd-scan-meter">
-          <span style={{ width: done ? `${Math.max(4, s.score)}%` : '0%' }} />
+          {/* The fill is a part of the whole scale, so its gradient is sized
+              to the track: safe at the left end, risky at the right. */}
+          <span
+            style={{
+              width: done ? `${Math.max(4, s.score)}%` : '0%',
+              backgroundSize: `${10000 / Math.max(4, s.score)}% 100%`,
+            }}
+          />
         </span>
         <ul className="pd-scan-signs">
           {s.signs.map((sign, i) => (

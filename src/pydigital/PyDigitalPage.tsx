@@ -7,36 +7,38 @@ import { EmberField } from './components/EmberField';
 import { LegitAiScene } from './components/LegitAiScene';
 import { Glyph, Mark } from './components/Pixels';
 import { Footer, SmartLink, TopBar } from './components/Chrome';
+import { SolignitionScene } from './components/SolignitionScene';
 import { VortaScene } from './components/VortaScene';
 import {
   DOCS,
+  LEGAL_APPS,
+  PRACTICES,
   PRINCIPLES,
   SHOWCASE,
   STUDIO_EMAIL,
   accentOf,
-  appHref,
   docHref,
+  projectAnchor,
+  projectById,
   shortName,
+  type Project,
   type Scene,
-  type Showcase,
 } from './content';
 import { usePageChrome, useReveal } from './hooks';
 
 const SCENES: Record<Scene, ComponentType> = {
   vorta: VortaScene,
   diggle: DiggleScene,
+  solignition: SolignitionScene,
   legitai: LegitAiScene,
 };
 
 const accent = (color: string) => ({ '--pd-accent': color }) as CSSProperties;
 
-const appById = (id: string) => SHOWCASE.find((s) => s.app.id === id)?.app;
+/** Community links the projects publish, named for their project. */
+const COMMUNITY = SHOWCASE.flatMap((p) => p.socials);
 
-/** Community links the apps publish (src/data/apps.ts), named for their app. */
-const COMMUNITY = SHOWCASE.flatMap(({ app }) => [
-  ...(app.socials?.x ? [{ href: app.socials.x, label: `${shortName(app)} on X` }] : []),
-  ...(app.socials?.discord ? [{ href: app.socials.discord, label: `${shortName(app)} on Discord` }] : []),
-]);
+const NewTab = () => <span className="pd-sr"> (opens in a new tab)</span>;
 
 export const PyDigitalPage = () => {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -59,17 +61,17 @@ export const PyDigitalPage = () => {
           <div className="pd-wrap pd-hero-layout">
             <div className="pd-hero-copy">
               <p className="pd-eyebrow">
-                <span className="pd-hide-narrow">Py Digital&nbsp;&middot;&nbsp;</span>Independent games &amp; apps
+                <span className="pd-hide-narrow">Py Digital&nbsp;&middot;&nbsp;</span>Games, smart contracts &amp; DeFi
               </p>
               <h1 className="pd-display">
-                Small games, built all the way down
+                <span className="pd-display-line">Games and DeFi, </span>
+                built all the way down
                 <span className="pd-stop" aria-hidden="true" />
                 <span className="pd-sr">.</span>
               </h1>
               <p className="pd-lede">
-                We&rsquo;re an independent studio making games and apps for your phone. Each one starts from a single
-                idea and gets built with care all the way through, from fairness checks you&rsquo;ll never notice to
-                policies you can actually read.
+                Py Digital is an independent studio. We make games and apps for your phone, write smart contracts and
+                DeFi protocols on Solana, and are setting up a proprietary trading firm.
               </p>
               <div className="pd-cta-row">
                 <a className="pd-btn pd-btn--solid" href="#work">
@@ -79,9 +81,10 @@ export const PyDigitalPage = () => {
                   Get in touch
                 </a>
               </div>
-              <ul className="pd-facts" aria-label="Where our games are">
-                <li>On Google Play</li>
-                <li>On the Solana dApp Store</li>
+              <ul className="pd-facts" aria-label="Where our work runs">
+                <li>Google Play</li>
+                <li>Solana dApp Store</li>
+                <li>Solana devnet</li>
               </ul>
             </div>
 
@@ -96,23 +99,57 @@ export const PyDigitalPage = () => {
           </div>
         </section>
 
+        {/* ── What we build ──────────────────────────────────── */}
+        <section className="pd-section" id="studio">
+          <div className="pd-wrap">
+            <header className="pd-head pd-reveal">
+              <p className="pd-eyebrow">
+                <span className="pd-index">01</span>What we build
+              </p>
+              <h2 className="pd-h2">From one-thumb games to on-chain lending.</h2>
+              <p className="pd-body">Four kinds of work, from one studio, held to one standard.</p>
+            </header>
+            <ul className="pd-practices">
+              {PRACTICES.map((p, i) => (
+                <li key={p.title} className="pd-practice pd-reveal" style={{ transitionDelay: `${i * 70}ms` }}>
+                  <Glyph name={p.glyph} />
+                  <h3>{p.title}</h3>
+                  <p>{p.body}</p>
+                  <div className="pd-practice-foot">
+                    {p.projects.map((id) => {
+                      const project = projectById(id);
+                      if (!project) return null;
+                      return (
+                        <a key={id} className="pd-chip" href={projectAnchor(id)} style={accent(project.accent)}>
+                          {shortName(project.name)}
+                        </a>
+                      );
+                    })}
+                    {p.status && <span className="pd-status">{p.status}</span>}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* ── The work ───────────────────────────────────────── */}
         <section className="pd-section" id="work">
           <div className="pd-wrap">
             <header className="pd-head pd-reveal">
               <p className="pd-eyebrow">
-                <span className="pd-index">01</span>The work
+                <span className="pd-index">02</span>The work
               </p>
               <h2 className="pd-h2">Built here, running live.</h2>
               <p className="pd-body">
-                Two games out now, and an app that spots scams. The game windows are live: Vorta plays by the
-                game&rsquo;s own rules, flown by its autopilot, and Diggle digs with sprites cut from the game&rsquo;s
-                own sheets.
+                Two games out now, a lending protocol live on Solana devnet, and an app that spots scams. The game
+                windows are live, built from each game&rsquo;s own rules and art. The other two are illustrations of how
+                the product works.
               </p>
             </header>
             <div className="pd-works">
-              {SHOWCASE.map((item, i) => (
-                <Work key={item.app.id} item={item} index={i} />
+              {SHOWCASE.map((project, i) => (
+                <Work key={project.id} project={project} index={i} />
               ))}
             </div>
           </div>
@@ -123,11 +160,12 @@ export const PyDigitalPage = () => {
           <div className="pd-wrap">
             <header className="pd-head pd-reveal">
               <p className="pd-eyebrow">
-                <span className="pd-index">02</span>How we build
+                <span className="pd-index">03</span>How we build
               </p>
               <h2 className="pd-h2">Three rules, every project.</h2>
               <p className="pd-body">
-                Rules are easy to write down, so each one comes with where it shows up in what we&rsquo;ve shipped.
+                Fairness checks you&rsquo;ll never notice, programs that hold no keys, policies you can actually read.
+                Each rule comes with where it shows up in what we&rsquo;ve shipped.
               </p>
             </header>
             <ol className="pd-principles">
@@ -138,10 +176,10 @@ export const PyDigitalPage = () => {
                   <p>{p.body}</p>
                   <ul className="pd-receipts" aria-label="Where it shows">
                     {p.receipts.map((r) => {
-                      const app = appById(r.app);
+                      const project = projectById(r.project);
                       return (
-                        <li key={r.text} style={accent(accentOf(r.app))}>
-                          <span className="pd-chip">{app ? shortName(app) : r.app}</span>
+                        <li key={r.text} style={accent(accentOf(r.project))}>
+                          <span className="pd-chip">{project ? shortName(project.name) : r.project}</span>
                           <span>{r.text}</span>
                         </li>
                       );
@@ -158,20 +196,20 @@ export const PyDigitalPage = () => {
           <div className="pd-wrap">
             <header className="pd-head pd-reveal">
               <p className="pd-eyebrow">
-                <span className="pd-index">03</span>Legal
+                <span className="pd-index">04</span>Legal
               </p>
               <h2 className="pd-h2">Every policy, in plain sight.</h2>
               <p className="pd-body">
-                The privacy policy, terms, license and copyright notice for everything we make, in one place and
-                written to be read.
+                The privacy policy, terms, license and copyright notice for each of our apps, in one place and written
+                to be read.
               </p>
             </header>
             <div className="pd-legal pd-reveal">
               <table className="pd-legal-table">
-                <caption className="pd-sr">Legal documents for each project</caption>
+                <caption className="pd-sr">Legal documents for each app</caption>
                 <thead>
                   <tr>
-                    <th scope="col">Project</th>
+                    <th scope="col">App</th>
                     {DOCS.map((d) => (
                       <th key={d.type} scope="col">
                         {d.label}
@@ -181,7 +219,7 @@ export const PyDigitalPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {SHOWCASE.map(({ app }) => (
+                  {LEGAL_APPS.map((app) => (
                     <tr key={app.id}>
                       <th scope="row">
                         <AppIcon app={app} />
@@ -194,7 +232,7 @@ export const PyDigitalPage = () => {
                         <td key={d.type}>
                           <SmartLink className="pd-doc" to={docHref(app.id, d.type)}>
                             {d.label}
-                            <span className="pd-sr">, {shortName(app)}</span>
+                            <span className="pd-sr">, {shortName(app.name)}</span>
                             <span className="pd-doc-arrow" aria-hidden="true">
                               &rarr;
                             </span>
@@ -220,7 +258,7 @@ export const PyDigitalPage = () => {
           </div>
           <div className="pd-wrap pd-contact-inner pd-reveal">
             <p className="pd-eyebrow">
-              <span className="pd-index">04</span>Contact
+              <span className="pd-index">05</span>Contact
             </p>
             <h2 className="pd-contact-title">Say hello.</h2>
             <p className="pd-body">Support, feedback, press or partnerships: one address reaches the studio.</p>
@@ -236,7 +274,7 @@ export const PyDigitalPage = () => {
                   <li key={c.href}>
                     <a href={c.href} target="_blank" rel="noreferrer">
                       {c.label}
-                      <span className="pd-sr"> (opens in a new tab)</span>
+                      <NewTab />
                     </a>
                   </li>
                 ))}
@@ -251,20 +289,23 @@ export const PyDigitalPage = () => {
   );
 };
 
-const Work = ({ item, index }: { item: Showcase; index: number }) => {
-  const { app } = item;
-  const Scene = item.scene ? SCENES[item.scene] : null;
-  const name = shortName(app);
+const Work = ({ project, index }: { project: Project; index: number }) => {
+  const Scene = project.scene ? SCENES[project.scene] : null;
 
   return (
-    <article className="pd-work pd-reveal" style={accent(item.accent)} aria-labelledby={`work-${app.id}`}>
+    <article
+      className="pd-work pd-reveal"
+      id={`project-${project.id}`}
+      style={accent(project.accent)}
+      aria-labelledby={`project-${project.id}-name`}
+    >
       <div className="pd-window">
-        {Scene ? <Scene /> : <Art app={app} />}
-        {item.caption && (
+        {Scene ? <Scene /> : <Art project={project} />}
+        {project.caption && (
           <p className="pd-window-chip">
-            {item.live && <span className="pd-live" aria-hidden="true" />}
-            {item.live ? 'Live: ' : ''}
-            {item.caption}
+            {project.live && <span className="pd-live" aria-hidden="true" />}
+            {project.live ? 'Live: ' : ''}
+            {project.caption}
           </p>
         )}
       </div>
@@ -272,17 +313,22 @@ const Work = ({ item, index }: { item: Showcase; index: number }) => {
       <div className="pd-work-copy">
         <p className="pd-work-meta">
           <span className="pd-index">{String(index + 1).padStart(2, '0')}</span>
-          {item.kind}
-          {item.platform && <span className="pd-work-platform">{item.platform}</span>}
+          {project.kind}
+          {(project.platform || project.status) && (
+            <span className="pd-work-where">
+              {project.platform && <span className="pd-work-platform">{project.platform}</span>}
+              {project.status && <span className="pd-status">{project.status}</span>}
+            </span>
+          )}
         </p>
-        <h3 className="pd-work-name" id={`work-${app.id}`}>
-          {app.name}
+        <h3 className="pd-work-name" id={`project-${project.id}-name`}>
+          {project.name}
         </h3>
-        {item.tagline && <p className="pd-work-tagline">{item.tagline}</p>}
-        {item.summary && <p className="pd-body">{item.summary}</p>}
-        {item.stats.length > 0 && (
+        {project.tagline && <p className="pd-work-tagline">{project.tagline}</p>}
+        {project.summary && <p className="pd-body">{project.summary}</p>}
+        {project.stats.length > 0 && (
           <dl className="pd-stats">
-            {item.stats.map((s) => (
+            {project.stats.map((s) => (
               <div key={s.label}>
                 <dt>{s.label}</dt>
                 <dd>{s.value}</dd>
@@ -291,32 +337,32 @@ const Work = ({ item, index }: { item: Showcase; index: number }) => {
           </dl>
         )}
         <div className="pd-work-actions">
-          <SmartLink className="pd-btn pd-btn--solid" to={appHref(app.id)}>
-            Visit {name}
+          <SmartLink className="pd-btn pd-btn--solid" to={project.href}>
+            Visit {shortName(project.name)}
           </SmartLink>
-          {item.store && (
-            <a className="pd-arrow-link" href={item.store.href} target="_blank" rel="noreferrer">
-              {item.store.label}
+          {project.links.map((l) => (
+            <a key={l.href} className="pd-arrow-link" href={l.href} target="_blank" rel="noreferrer">
+              {l.label}
               <span aria-hidden="true">&#8599;</span>
-              <span className="pd-sr"> (opens in a new tab)</span>
+              <NewTab />
             </a>
-          )}
+          ))}
         </div>
       </div>
     </article>
   );
 };
 
-/** The window for an app with no scene yet: its art, or its initial. */
-const Art = ({ app }: { app: AppData }) => (
+/** The window for a project with no scene yet: its art, or its initial. */
+const Art = ({ project }: { project: Project }) => (
   <div className="pd-scene pd-art">
-    {app.banner ? (
-      <img src={app.banner} alt="" loading="lazy" decoding="async" />
-    ) : app.logo ? (
-      <img className="pd-art-logo" src={app.logo} alt="" loading="lazy" decoding="async" />
+    {project.art?.banner ? (
+      <img src={project.art.banner} alt="" loading="lazy" decoding="async" />
+    ) : project.art?.logo ? (
+      <img className="pd-art-logo" src={project.art.logo} alt="" loading="lazy" decoding="async" />
     ) : (
       <span className="pd-art-initial" aria-hidden="true">
-        {app.name.charAt(0)}
+        {project.name.charAt(0)}
       </span>
     )}
   </div>

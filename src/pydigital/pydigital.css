@@ -252,6 +252,8 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   background: var(--pd-ember); box-shadow: 0 0 12px var(--pd-ember);
 }
 
+/* The first phrase holds its own line; the rest wraps balanced under it. */
+.pd-display-line { display: block; }
 .pd-display {
   font-family: var(--pd-display);
   font-weight: 620;
@@ -328,6 +330,45 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   .pd-cta-row .pd-btn { flex: 1 1 auto; }
 }
 
+/* ── What we build ───────────────────────────────────────────── */
+.pd-practices {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem;
+}
+@media (max-width: 1080px) { .pd-practices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) { .pd-practices { grid-template-columns: 1fr; } }
+.pd-practice {
+  position: relative;
+  display: flex; flex-direction: column;
+  min-height: 100%;
+  padding: 1.75rem 1.6rem 1.5rem;
+  border: 1px solid var(--pd-line); border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 240, 225, 0.03), rgba(255, 240, 225, 0.008));
+  transition: border-color 0.25s ease, background-color 0.25s ease;
+}
+.pd-practice:hover { border-color: var(--pd-line-2); }
+.pd-practice .pd-glyph { margin-bottom: 1.6rem; }
+.pd-practice h3 {
+  margin-bottom: 0.6rem;
+  font-family: var(--pd-display); font-weight: 600;
+  font-size: 1.3rem; line-height: 1.15; letter-spacing: -0.02em;
+}
+.pd-practice > p { font-size: 0.95rem; color: var(--pd-ink-2); }
+.pd-practice-foot { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: auto; padding-top: 1.5rem; }
+.pd-practice-foot a.pd-chip { transition: background-color 0.2s ease, border-color 0.2s ease; }
+.pd-practice-foot a.pd-chip:hover { border-color: color-mix(in srgb, var(--pd-accent) 70%, transparent); background: color-mix(in srgb, var(--pd-accent) 10%, transparent); }
+.pd-status {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.28rem 0.65rem;
+  border: 1px dashed var(--pd-line-3); border-radius: 999px;
+  font-family: var(--pd-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--pd-ink-2);
+}
+.pd-status::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--pd-gold); box-shadow: 0 0 8px var(--pd-gold);
+  animation: pd-blink 2.4s ease-in-out infinite;
+}
+
 /* ── The work ────────────────────────────────────────────────── */
 .pd-works { display: flex; flex-direction: column; gap: clamp(5rem, 11vw, 9rem); }
 .pd-work {
@@ -336,9 +377,12 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   align-items: center;
   gap: clamp(2.5rem, 5.5vw, 5.5rem);
 }
+/* Every other row puts its window on the right, and mirrors the columns so
+   the window keeps the wide one. */
+.pd-work:nth-child(even) { grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr); }
 .pd-work:nth-child(even) .pd-window { order: 2; }
 @media (max-width: 899px) {
-  .pd-work { grid-template-columns: 1fr; gap: 2rem; }
+  .pd-work, .pd-work:nth-child(even) { grid-template-columns: 1fr; gap: 2rem; }
   .pd-work:nth-child(even) .pd-window { order: 0; }
 }
 
@@ -405,9 +449,11 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 }
 .pd-work-meta .pd-index { color: var(--pd-accent); }
 .pd-work-meta .pd-index::after { content: ''; display: inline-block; vertical-align: middle; width: 20px; height: 1px; margin: 0 0.75rem; background: currentColor; opacity: 0.55; }
+/* Where it runs, and how far along it is: they wrap as one. */
+.pd-work-where { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.9rem; }
 .pd-work-platform::before { content: '/'; margin: 0 0.65rem; opacity: 0.5; }
 @media (max-width: 520px) {
-  .pd-work-platform { flex-basis: 100%; }
+  .pd-work-where { flex-basis: 100%; }
   .pd-work-platform::before { content: none; }
 }
 .pd-work-name {
@@ -481,8 +527,11 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
     linear-gradient(160deg, #170d0d, #0a0606);
 }
 
+/* No overflow clip here: a box that clips can be squeezed below its content
+   by the grid, which is how the card once ended up over the messages. The
+   scan beam gets a clipped layer of its own instead. */
 .pd-scan-chat {
-  position: relative; overflow: hidden;
+  position: relative;
   padding: 1.1em;
   border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 1.5em;
   background: rgba(255, 255, 255, 0.035);
@@ -535,6 +584,7 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 .pd-scan-typing span:nth-child(2) { animation-delay: 0.15s; }
 .pd-scan-typing span:nth-child(3) { animation-delay: 0.3s; }
 
+.pd-scan-clip { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; pointer-events: none; }
 .pd-scan-beam {
   position: absolute; left: 0; right: 0; top: 0; height: 36%;
   background: linear-gradient(180deg, transparent, rgba(110, 231, 183, 0.08) 70%, rgba(110, 231, 183, 0.55) 99%, transparent);
@@ -572,7 +622,7 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 .pd-scan[data-verdict='scam'] .pd-scan-status { color: #ffd0d0; }
 .pd-scan[data-verdict='safe'] .pd-scan-status { color: #d4fbe9; }
 .pd-scan-meter { display: block; height: 0.4em; margin: 0.9em 0 1em; border-radius: 999px; background: rgba(255, 255, 255, 0.08); overflow: hidden; }
-.pd-scan-meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--scan-safe), var(--scan-flag) 55%, var(--scan-risk)); background-size: 22em 100%; transition: width 0.9s var(--pd-ease); }
+.pd-scan-meter span { display: block; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--scan-safe), var(--scan-flag) 55%, var(--scan-risk)) no-repeat; transition: width 0.9s var(--pd-ease); }
 .pd-scan-signs { display: flex; flex-direction: column; gap: 0.45em; }
 .pd-scan-signs li {
   display: flex; align-items: center; gap: 0.55em;
@@ -589,13 +639,107 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 .pd-scan-note { margin-top: 0.9em; font-size: 0.82em; color: rgba(232, 243, 238, 0.6); opacity: 0; transition: opacity 0.4s ease 0.3s; }
 .pd-scan-note[data-on] { opacity: 1; }
 
-/* Too narrow for side by side: the card overlaps the foot of the chat. */
+/* Too narrow for side by side: the chat and the card stack, with a gap
+   between them, never on top of each other. To fit, the sender line goes
+   and the card lays its score beside its list of warning signs. */
+@container (max-width: 540px) {
+  .pd-scan {
+    grid-template-columns: 1fr; align-content: safe center; gap: 0.8em;
+    padding: 3.4rem 5% 5%;
+    font-size: clamp(10px, 3.1cqi, 14px);
+  }
+  .pd-scan-chat { padding: 0.85em; }
+  .pd-scan-head { display: none; }
+  .pd-scan-thread { min-height: 8.6em; }
+  .pd-scan-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'kicker kicker' 'score signs' 'status signs' 'meter meter';
+    column-gap: 1.4em;
+    padding: 0.95em 1.1em 1em;
+  }
+  .pd-scan-kicker { grid-area: kicker; margin-bottom: 0.35em; }
+  .pd-scan-score { grid-area: score; margin: 0; font-size: 2.6em; }
+  .pd-scan-status { grid-area: status; }
+  .pd-scan-signs { grid-area: signs; align-self: center; }
+  .pd-scan-meter { grid-area: meter; margin: 0.85em 0 0; }
+  .pd-scan-note { display: none; }
+}
+
+/* ── Solignition's illustration ──────────────────────────────── */
+/* Solignition's own palette (solignition.xyz): green on near-black. */
+.pd-sol {
+  --sol-bg: #0a0d0c;
+  --sol-panel: #0f1412;
+  --sol-ink: #e8ede9;
+  --sol-ink-2: #b4bcb6;
+  --sol-ink-3: #6e7570;
+  --sol-line: #252b28;
+  --sol-accent: #56d57b;
+  display: flex; flex-direction: column; gap: 4%;
+  padding: 3.4rem 4% 4%;
+  background:
+    radial-gradient(60% 55% at 50% 45%, rgba(86, 213, 123, 0.1), transparent 70%),
+    radial-gradient(circle at 1px 1px, rgba(232, 237, 233, 0.08) 1px, transparent 1.5px) 0 0 / 18px 18px,
+    var(--sol-bg);
+  color: var(--sol-ink);
+  font-family: var(--pd-mono);
+  transition: opacity 0.45s ease;
+}
+.pd-sol[data-step='out'] { opacity: 0; }
+/* Takes whatever height the status line leaves, and scales to fit it. */
+.pd-sol-diagram { display: block; flex: 1 1 0; min-height: 0; width: 100%; overflow: visible; }
+
+.pd-sol-edges path { fill: none; stroke: var(--sol-line); stroke-width: 2; stroke-dasharray: 4 6; transition: stroke 0.4s ease; }
+.pd-sol-edges path[data-on] { stroke: var(--sol-accent); animation: pd-sol-dash 0.7s linear infinite; }
+.pd-sol-edge-labels text { font-size: 12px; letter-spacing: 0.04em; fill: var(--sol-ink-3); }
+
+.pd-sol-node { transition: opacity 0.4s ease; }
+.pd-sol-node-box { fill: var(--sol-panel); stroke: var(--sol-line); stroke-width: 1.5; transition: fill 0.35s ease, stroke 0.35s ease; }
+.pd-sol-node[data-done] .pd-sol-node-box { stroke: rgba(86, 213, 123, 0.5); }
+.pd-sol-node[data-on] .pd-sol-node-box { fill: #11221a; stroke: var(--sol-accent); }
+.pd-sol-node[data-dim] { opacity: 0.45; }
+.pd-sol-node-label { font-size: 16px; font-weight: 600; fill: var(--sol-ink); }
+.pd-sol-node-sub { font-size: 12px; fill: var(--sol-ink-3); transition: fill 0.35s ease; }
+.pd-sol-node[data-on] .pd-sol-node-sub,
+.pd-sol-node[data-done] .pd-sol-node-sub { fill: var(--sol-ink-2); }
+.pd-sol-ring path:first-child { stroke: var(--sol-accent); }
+.pd-sol-ring path:last-child { fill: var(--sol-accent); }
+
+.pd-sol-badge {
+  transform: translate(var(--px), var(--py));
+  opacity: 0;
+  transition: transform 1.2s var(--pd-ease), opacity 0.35s ease;
+}
+.pd-sol-badge[data-shown] { opacity: 1; }
+.pd-sol-badge rect { fill: var(--sol-accent); }
+.pd-sol-badge text { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; fill: #06120b; }
+
+.pd-sol-packet { fill: var(--sol-accent); animation: pd-sol-packet 1.3s var(--pd-ease) var(--d) both; }
+
+.pd-sol-step { animation: pd-fade 0.5s ease both; }
+.pd-sol-step-number { font-family: var(--pd-display); font-size: 40px; font-weight: 600; letter-spacing: -0.02em; fill: var(--sol-accent); }
+.pd-sol-step-title { font-size: 13px; letter-spacing: 0.08em; fill: var(--sol-ink); }
+
+.pd-sol-line {
+  flex: none;
+  min-height: 3.6em;
+  padding: 0.75em 1em;
+  border: 1px solid var(--sol-line); border-radius: 10px;
+  background: rgba(15, 20, 18, 0.85);
+  font-size: clamp(10px, 1.85cqi, 13px); line-height: 1.4;
+  color: var(--sol-ink-2);
+}
+.pd-sol-prompt { color: var(--sol-accent); }
+.pd-sol-caret {
+  display: inline-block;
+  width: 0.55em; height: 1em; margin-left: 0.3em; vertical-align: -0.15em;
+  background: var(--sol-accent);
+  animation: pd-blink 1s steps(1) infinite;
+}
 @container (max-width: 520px) {
-  .pd-scan { grid-template-columns: 1fr; align-content: end; gap: 0; padding: 15% 6% 7%; font-size: clamp(10px, 3.1cqi, 14px); }
-  .pd-scan-thread { min-height: 8.5em; }
-  .pd-scan-card { position: relative; margin: -1.2em 4% 0; padding: 1em 1.1em 1.1em; }
-  .pd-scan-score { font-size: 2.8em; }
-  .pd-scan-meter { margin: 0.7em 0 0.8em; }
+  .pd-sol { padding: 3rem 4% 5%; }
+  .pd-sol-line { font-size: clamp(10px, 3cqi, 12px); }
 }
 
 /* ── Principles ──────────────────────────────────────────────── */
@@ -748,6 +892,7 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 .pd-footer-head { margin-bottom: 0.25rem; font-family: var(--pd-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--pd-ink-3); }
 .pd-footer nav a { font-size: 0.9rem; color: var(--pd-ink-2); transition: color 0.2s ease; }
 .pd-footer nav a:hover { color: var(--pd-ink); }
+.pd-footer-note { max-width: 70ch; margin-top: 2.4rem; font-size: 0.78rem; line-height: 1.55; color: var(--pd-ink-3); }
 .pd-footer-base {
   display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem;
   margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--pd-line);
@@ -765,6 +910,14 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 @keyframes pd-rise { from { opacity: 0; transform: translateY(18px); } }
 @keyframes pd-arrive { from { opacity: 0; transform: translateY(24px) scale(0.97); } }
 @keyframes pd-blink { 50% { opacity: 0.35; } }
+@keyframes pd-fade { from { opacity: 0; } }
+@keyframes pd-sol-dash { to { stroke-dashoffset: -20; } }
+@keyframes pd-sol-packet {
+  from { transform: translate(var(--ax), var(--ay)); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  to { transform: translate(var(--bx), var(--by)); opacity: 0; }
+}
 @keyframes pd-ember {
   0%, 100% { opacity: 1; }
   45% { opacity: 0.82; }
@@ -788,5 +941,5 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   .pd-work.pd-reveal .pd-window,
   .pd-work.pd-reveal .pd-work-copy { opacity: 1; transform: none; filter: none; transition: none; }
   .pd *, .pd *::before, .pd *::after { animation: none !important; }
-  .pd-scan, .pd-scan * { transition: none !important; }
+  .pd-scan, .pd-scan *, .pd-sol, .pd-sol * { transition: none !important; }
 }
