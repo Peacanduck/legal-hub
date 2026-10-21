@@ -36,7 +36,7 @@ export const apps: AppData[] = [
     },
     developerName: 'PeacanDuck',
     contactEmail: 'support.LegitAi@proton.me',
-    lastUpdated: 'Febuary 1, 2026'
+    lastUpdated: 'February 1, 2026'
   },
   {
     id: 'diggle',

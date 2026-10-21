@@ -2,7 +2,6 @@ import { lazy, Suspense, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import ScrollToTop from './components/ScrollToTop';
-import { Home } from './pages/Home';
 import { AppHome } from './pages/AppHome';
 import { LegalDoc } from './pages/LegalDoc';
 import { DIGGLE_ORIGIN, ON_DIGGLE_HOST, ON_HUB_HOST } from './diggle/site';
@@ -24,6 +23,11 @@ const VortaLegalPage = lazy(() =>
   import('./vorta/legal/VortaLegalPage').then((m) => ({ default: m.VortaLegalPage })),
 );
 
+// The Py Digital home page is full-bleed as well, and lazy like the others:
+// its fonts, its stylesheet and the scenes it runs, Vorta's engine among
+// them, load only on /. Diggle's and Vorta's entries never fetch any of it.
+const PyDigitalPage = lazy(() => import('./pydigital/PyDigitalPage').then((m) => ({ default: m.PyDigitalPage })));
+
 const DIGGLE_LEGAL_TYPES = ['privacy', 'terms', 'license', 'copyright'] as const;
 type DiggleLegalType = (typeof DIGGLE_LEGAL_TYPES)[number];
 
@@ -42,6 +46,12 @@ const vortaFallback = <div style={{ minHeight: '100vh', background: '#05040f' }}
 const vortaPage = (
   <Suspense fallback={vortaFallback}>
     <VortaPage />
+  </Suspense>
+);
+
+const pydigitalPage = (
+  <Suspense fallback={<div style={{ minHeight: '100vh', background: '#0b0908' }} />}>
+    <PyDigitalPage />
   </Suspense>
 );
 
@@ -78,6 +88,8 @@ const DiggleSite = () => (
  *  (vercel.json redirects full page loads; this catches in-app links). */
 const HubSite = () => (
   <Routes>
+    <Route path="/" element={pydigitalPage} />
+
     <Route path="/diggle" element={ON_HUB_HOST ? <LeaveFor url={`${DIGGLE_ORIGIN}/`} /> : digglePage} />
 
     {/* Explicit paths: they outrank /:appId/privacy etc. below, where a
@@ -112,9 +124,6 @@ const HubSite = () => (
         </Layout>
       }
     >
-      {/* Home Page */}
-      <Route path="/" element={<Home />} />
-
       {/* Dynamic App Routes */}
       <Route path="/:appId" element={<AppHome />} />
       <Route path="/:appId/privacy" element={<LegalDoc type="privacy" />} />
