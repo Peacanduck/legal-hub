@@ -950,10 +950,12 @@ a.pd-chip:hover { border-color: color-mix(in srgb, var(--pd-accent) 70%, transpa
 }
 
 /* ── Fire columns ────────────────────────────────────────────── */
-/* A stone column in each margin, a live flame in a brazier on top. They
-   need a margin beside the 1200px content to stand in, so below 1360px
-   they are not drawn at all. The pixel steps up with the screen, in whole
-   pixels so the art stays crisp: 3px, 4px from 1440px, 5px from 1680px. */
+/* A stone column in the middle of each margin, a live flame in a brazier
+   on top. They need a margin beside the 1200px content to stand in, so
+   below 1360px they are not drawn at all. The pixel grows with the
+   margin, in whole pixels so the art stays crisp, from 3px to 8px (10px
+   on very wide screens). Each step leaves the flame's box at least 10px
+   clear of the content, even with a 17px scrollbar. */
 .pd-pillars { display: none; }
 @media (min-width: 1360px) {
   .pd-pillars {
@@ -966,13 +968,16 @@ a.pd-chip:hover { border-color: color-mix(in srgb, var(--pd-accent) 70%, transpa
   }
   .pd-pillars.is-lit { opacity: 1; transform: none; }
 }
-@media (min-width: 1440px) { .pd-pillars { --pd-pillar-px: 4px; } }
-@media (min-width: 1680px) { .pd-pillars { --pd-pillar-px: 5px; } }
+@media (min-width: 1400px) { .pd-pillars { --pd-pillar-px: 4px; } }
+@media (min-width: 1440px) { .pd-pillars { --pd-pillar-px: 5px; } }
+@media (min-width: 1500px) { .pd-pillars { --pd-pillar-px: 6px; } }
+@media (min-width: 1600px) { .pd-pillars { --pd-pillar-px: 8px; } }
+@media (min-width: 2200px) { .pd-pillars { --pd-pillar-px: 10px; } }
 
-/* Centred in its margin, but never more than 6rem out from the content, so
-   on a wide screen the two frame the page instead of the screen. */
+/* Centred in its margin: the margin is 50% - 600px wide, so its middle is
+   at 25% - 300px, less half the flame's 16-pixel box. */
 .pd-pillar {
-  --pd-pillar-at: calc(50% - 600px - min(25% - 300px, 6rem) - var(--pd-pillar-px) * 8);
+  --pd-pillar-at: calc(25% - 300px - var(--pd-pillar-px) * 8);
   position: absolute; top: 0; bottom: 0;
   isolation: isolate;
   display: flex; flex-direction: column; align-items: center;
