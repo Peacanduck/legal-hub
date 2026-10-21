@@ -252,7 +252,8 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   background: var(--pd-ember); box-shadow: 0 0 12px var(--pd-ember);
 }
 
-/* The first phrase holds its own line; the rest wraps balanced under it. */
+/* "Software, built" holds its own line, so "all the way down" stays
+   together under it; balance alone breaks after "all". */
 .pd-display-line { display: block; }
 .pd-display {
   font-family: var(--pd-display);
@@ -332,10 +333,9 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 
 /* ── What we build ───────────────────────────────────────────── */
 .pd-practices {
-  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem;
 }
-@media (max-width: 1080px) { .pd-practices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 600px) { .pd-practices { grid-template-columns: 1fr; } }
+@media (max-width: 899px) { .pd-practices { grid-template-columns: 1fr; } }
 .pd-practice {
   position: relative;
   display: flex; flex-direction: column;
@@ -354,8 +354,14 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 }
 .pd-practice > p { font-size: 0.95rem; color: var(--pd-ink-2); }
 .pd-practice-foot { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: auto; padding-top: 1.5rem; }
-.pd-practice-foot a.pd-chip { transition: background-color 0.2s ease, border-color 0.2s ease; }
-.pd-practice-foot a.pd-chip:hover { border-color: color-mix(in srgb, var(--pd-accent) 70%, transparent); background: color-mix(in srgb, var(--pd-accent) 10%, transparent); }
+/* How long the studio has done it: a plain tag, not a live status. */
+.pd-since {
+  display: inline-flex; align-items: center;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid var(--pd-line-2); border-radius: 999px;
+  font-family: var(--pd-mono); font-size: 0.64rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--pd-ink-3);
+}
 .pd-status {
   display: inline-flex; align-items: center; gap: 0.5rem;
   padding: 0.28rem 0.65rem;
@@ -487,6 +493,44 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
 .pd-art img { width: 100%; height: 100%; object-fit: cover; }
 .pd-art .pd-art-logo { width: 38%; height: auto; border-radius: 22%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8); }
 .pd-art-initial { font-family: var(--pd-display); font-weight: 650; font-size: clamp(5rem, 14vw, 9rem); letter-spacing: -0.05em; color: var(--pd-accent); }
+
+/* ── Earlier work ────────────────────────────────────────────── */
+.pd-earlier { margin-top: clamp(5rem, 11vw, 9rem); }
+.pd-earlier-label {
+  display: flex; align-items: center; gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-family: var(--pd-mono); font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--pd-ink-3);
+}
+.pd-earlier-label::after { content: ''; flex: 1; height: 1px; background: var(--pd-line); }
+.pd-earlier-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 759px) { .pd-earlier-list { grid-template-columns: 1fr; } }
+.pd-earlier-card {
+  display: flex; flex-direction: column;
+  padding: 1.6rem 1.6rem 1.45rem;
+  border: 1px solid var(--pd-line); border-radius: 22px;
+  background: linear-gradient(180deg, rgba(255, 240, 225, 0.03), rgba(255, 240, 225, 0.008));
+}
+/* Arrived at from a chip: the card says so. */
+.pd-earlier-card:target { border-color: var(--pd-line-3); }
+.pd-earlier-meta {
+  margin-bottom: 0.65rem;
+  font-family: var(--pd-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--pd-ink-3);
+}
+.pd-earlier-card h4 {
+  margin-bottom: 0.55rem;
+  font-family: var(--pd-display); font-weight: 600;
+  font-size: 1.45rem; line-height: 1.1; letter-spacing: -0.025em;
+}
+.pd-earlier-summary { font-size: 0.95rem; color: var(--pd-ink-2); }
+.pd-earlier-stack { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: auto; padding-top: 1.3rem; }
+.pd-earlier-stack li {
+  padding: 0.2rem 0.55rem;
+  border: 1px solid var(--pd-line-2); border-radius: 6px;
+  font-family: var(--pd-mono); font-size: 0.66rem; letter-spacing: 0.05em;
+  color: var(--pd-ink-2);
+}
 
 /* ── Diggle's readout ────────────────────────────────────────── */
 .pd-dig-readout {
@@ -742,7 +786,7 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   .pd-sol-line { font-size: clamp(10px, 3cqi, 12px); }
 }
 
-/* ── Principles ──────────────────────────────────────────────── */
+/* ── How we build ────────────────────────────────────────────── */
 .pd-section--principles {
   background: radial-gradient(60% 50% at 50% 0%, rgba(255, 106, 43, 0.05), transparent 70%);
 }
@@ -752,8 +796,8 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   border: 1px solid var(--pd-line); border-radius: 26px;
   background: var(--pd-line);
 }
-/* Each card spans four shared rows (glyph, title, body, receipts), so the
-   titles, the bodies and the receipts line up across the three. */
+/* Each card spans four shared rows (glyph, title, line, chips), so the
+   titles, the lines and the chips line up across the three. */
 .pd-principle {
   display: grid; grid-row: span 4; grid-template-rows: subgrid; align-content: start;
   padding: clamp(1.8rem, 3vw, 2.6rem);
@@ -770,12 +814,12 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   font-size: clamp(1.4rem, 2vw, 1.65rem); line-height: 1.12; letter-spacing: -0.025em;
 }
 .pd-principle > p { color: var(--pd-ink-2); font-size: 1rem; }
-.pd-receipts {
-  display: flex; flex-direction: column; gap: 1rem;
-  padding-top: 2rem;
+/* The projects that keep the promise, under a dashed rule. */
+.pd-principle-chips {
+  display: flex; flex-wrap: wrap; align-content: flex-start; gap: 0.45rem;
+  margin-top: 1.75rem; padding-top: 1.4rem;
+  background: repeating-linear-gradient(90deg, var(--pd-line-2) 0 4px, transparent 4px 8px) top / 100% 1px no-repeat;
 }
-.pd-receipts::before { content: ''; display: block; height: 1px; margin-bottom: 0.4rem; background: repeating-linear-gradient(90deg, var(--pd-line-2) 0 4px, transparent 4px 8px); }
-.pd-receipts li { display: flex; flex-direction: column; align-items: flex-start; gap: 0.45rem; font-size: 0.92rem; line-height: 1.5; color: var(--pd-ink-2); }
 .pd-chip {
   display: inline-flex; align-items: center; gap: 0.45rem;
   padding: 0.25rem 0.6rem 0.25rem 0.5rem;
@@ -784,6 +828,8 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   color: var(--pd-accent);
 }
 .pd-chip::before { content: ''; width: 5px; height: 5px; background: currentColor; }
+a.pd-chip { transition: background-color 0.2s ease, border-color 0.2s ease; }
+a.pd-chip:hover { border-color: color-mix(in srgb, var(--pd-accent) 70%, transparent); background: color-mix(in srgb, var(--pd-accent) 10%, transparent); }
 
 /* ── Legal ───────────────────────────────────────────────────── */
 .pd-legal {
@@ -903,6 +949,72 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   .pd-footer-grid > :first-child { grid-column: 1 / -1; }
 }
 
+/* ── Fire columns ────────────────────────────────────────────── */
+/* A stone column in each margin, a live flame in a brazier on top. They
+   need a margin beside the 1200px content to stand in, so below 1360px
+   they are not drawn at all. The pixel steps up with the screen, in whole
+   pixels so the art stays crisp: 3px, 4px from 1440px, 5px from 1680px. */
+.pd-pillars { display: none; }
+@media (min-width: 1360px) {
+  .pd-pillars {
+    --pd-pillar-px: 3px;
+    display: block;
+    position: fixed; inset: calc(var(--pd-topbar-h) + 1.25rem) 0 0; z-index: 2;
+    pointer-events: none;
+    opacity: 0; transform: translateY(32px);
+    transition: opacity 0.9s var(--pd-ease), transform 1.2s var(--pd-ease);
+  }
+  .pd-pillars.is-lit { opacity: 1; transform: none; }
+}
+@media (min-width: 1440px) { .pd-pillars { --pd-pillar-px: 4px; } }
+@media (min-width: 1680px) { .pd-pillars { --pd-pillar-px: 5px; } }
+
+/* Centred in its margin, but never more than 6rem out from the content, so
+   on a wide screen the two frame the page instead of the screen. */
+.pd-pillar {
+  --pd-pillar-at: calc(50% - 600px - min(25% - 300px, 6rem) - var(--pd-pillar-px) * 8);
+  position: absolute; top: 0; bottom: 0;
+  isolation: isolate;
+  display: flex; flex-direction: column; align-items: center;
+  width: calc(var(--pd-pillar-px) * 16);
+}
+.pd-pillar--left { left: var(--pd-pillar-at); }
+.pd-pillar--right { right: var(--pd-pillar-at); }
+/* The light the fire throws on the margin, breathing like the ember stop. */
+.pd-pillar::before {
+  content: ''; position: absolute; z-index: -1;
+  left: 50%; top: calc(var(--pd-pillar-px) * 14);
+  width: calc(var(--pd-pillar-px) * 48); aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(255, 106, 43, 0.12), rgba(255, 106, 43, 0.04) 55%, transparent);
+  animation: pd-ember 3.2s ease-in-out infinite;
+}
+/* The bowl's rim overlaps the flame's base, so the fire burns inside it. */
+.pd-pillar-fire {
+  position: relative; flex: none;
+  width: 100%; aspect-ratio: 16 / 22;
+  margin-bottom: calc(var(--pd-pillar-px) * -2);
+  -webkit-tap-highlight-color: transparent;
+}
+.pd-pillars.is-lit .pd-pillar-fire { pointer-events: auto; cursor: pointer; }
+.pd-pillar-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.pd-pillar-head {
+  position: relative; display: block; flex: none;
+  width: calc(var(--pd-pillar-px) * 12); height: calc(var(--pd-pillar-px) * 10);
+}
+/* Lit from the brazier at the top, falling away into the dark below. */
+.pd-pillar-shaft {
+  position: relative; flex: 1 1 0; min-height: 0;
+  width: calc(var(--pd-pillar-px) * 8);
+  -webkit-mask-image: linear-gradient(#000, transparent 78%);
+  mask-image: linear-gradient(#000, transparent 78%);
+}
+.pd-pillar-shaft svg { display: block; width: 100%; height: 100%; }
+.pd-pillar-shaft::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(rgba(255, 120, 50, 0.18), transparent 32%);
+}
+
 /* ── Motion ──────────────────────────────────────────────────── */
 .pd-reveal { opacity: 0; transform: translateY(22px); transition: opacity 0.9s var(--pd-ease), transform 0.9s var(--pd-ease); }
 .pd-reveal.is-in { opacity: 1; transform: none; }
@@ -942,4 +1054,5 @@ html:has(body.pd-page) { scroll-behavior: smooth; }
   .pd-work.pd-reveal .pd-work-copy { opacity: 1; transform: none; filter: none; transition: none; }
   .pd *, .pd *::before, .pd *::after { animation: none !important; }
   .pd-scan, .pd-scan *, .pd-sol, .pd-sol * { transition: none !important; }
+  .pd-pillars { transform: none; transition: none; }
 }

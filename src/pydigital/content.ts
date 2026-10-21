@@ -6,7 +6,9 @@ import type { GlyphName } from './art';
 // product is one that product's own page, site or policy already makes
 // (src/vorta/content.ts, src/diggle/content.ts, src/policies/, and
 // solignition.xyz for Solignition). The studio page repeats those claims and
-// never adds to them, so change a number at its source first.
+// never adds to them, so change a number at its source first. The earlier
+// business systems, LiteScan and PestControl, are described from their own
+// source code (2015–17), and their clients stay unnamed.
 
 /** The address the studio's games publish for support (src/data/apps.ts). */
 export const STUDIO_EMAIL = 'fu.developer@gmail.com';
@@ -188,10 +190,61 @@ export const SHOWCASE: Project[] = [...apps.map(fromApp), SOLIGNITION].sort(byOr
 export const LEGAL_APPS: AppData[] = [...apps].sort(byOrder);
 
 export const projectById = (id: string) => SHOWCASE.find((p) => p.id === id);
-export const accentOf = (id: string) => projectById(id)?.accent ?? '#ff6a2b';
 
-/** The page's own anchor for a project's row in the work section. */
+/** The page's own anchor for a project: its row in the work section, or its
+ *  card in the earlier work. */
 export const projectAnchor = (id: string) => `#project-${id}`;
+
+/** Business systems built before the studio's own products. They have no
+ *  page or store listing, so they get a card each and no window. */
+export interface EarlierProject {
+  id: string;
+  name: string;
+  years: string;
+  kind: string;
+  summary: string;
+  stack: string[];
+}
+
+export const EARLIER: EarlierProject[] = [
+  {
+    id: 'litescan',
+    name: 'LiteScan',
+    years: '2015–16',
+    kind: 'Point of sale and stock',
+    summary:
+      'A barcode point-of-sale and stock system: sales with a running total, stock takes by scanning, item photos, agent accounts and reports.',
+    stack: ['Java desktop', 'MySQL'],
+  },
+  {
+    id: 'pestcontrol',
+    name: 'PestControl',
+    years: '2016–17',
+    kind: 'Field data capture',
+    summary:
+      'Bait-station audits for a pest-control company. Technicians scan each device on an Android app that works offline; a desktop app manages clients, chemicals and reports.',
+    stack: ['Android', 'Java desktop', 'MySQL', 'Apache + PHP'],
+  },
+];
+
+/** Earlier work has no brand colour of its own: a warm stone, like the page. */
+const EARLIER_ACCENT = '#cdbba6';
+
+export interface Chip {
+  name: string;
+  accent: string;
+  href: string;
+}
+
+/** A chip that scrolls to a project, wherever on the page it is. */
+export const chipFor = (id: string): Chip | null => {
+  const project = projectById(id);
+  if (project) return { name: shortName(project.name), accent: project.accent, href: projectAnchor(id) };
+  const earlier = EARLIER.find((p) => p.id === id);
+  return earlier ? { name: earlier.name, accent: EARLIER_ACCENT, href: projectAnchor(id) } : null;
+};
+
+export const accentOf = (id: string) => chipFor(id)?.accent ?? '#ff6a2b';
 
 export interface Practice {
   title: string;
@@ -199,10 +252,18 @@ export interface Practice {
   glyph: GlyphName;
   /** Projects that show the practice, by id. */
   projects: string[];
-  status?: string;
+  /** A static tag after the chips. */
+  since?: string;
 }
 
 export const PRACTICES: Practice[] = [
+  {
+    title: 'Business systems',
+    body: 'Point of sale, stock control and field data capture: barcode-driven apps on Android and desktop, over a MySQL database.',
+    glyph: 'scan',
+    projects: ['litescan', 'pestcontrol'],
+    since: 'Since 2015',
+  },
   {
     title: 'Games and apps',
     body: 'Mobile games built around one idea, and apps that do one job well, from an orbital arcade game to an AI scam checker.',
@@ -210,76 +271,44 @@ export const PRACTICES: Practice[] = [
     projects: ['vorta', 'diggle', 'legitai'],
   },
   {
-    title: 'Smart contracts',
-    body: 'Solana programs and the clients that talk to them: on-chain lending, NFT mints, and wallet flows that hold up on a phone.',
-    glyph: 'code',
-    projects: ['solignition', 'diggle'],
-  },
-  {
-    title: 'DeFi',
-    body: 'Protocols with their rules on-chain. Solignition lends the SOL to deploy a program, and holds no keys while it does.',
+    title: 'Smart contracts and DeFi',
+    body: 'Solana programs and the clients that talk to them: a lending protocol that holds no keys, NFT mints, and wallet flows that hold up on a phone.',
     glyph: 'ring',
-    projects: ['solignition'],
-  },
-  {
-    title: 'Trading',
-    body: 'A proprietary trading firm, being set up now. There will be more to say here when it is ready.',
-    glyph: 'chart',
-    projects: [],
-    status: 'In formation',
+    projects: ['solignition', 'diggle'],
   },
 ];
 
-export interface Receipt {
-  project: string;
-  text: string;
-}
-
-export interface Principle {
+/** "How we build": a promise, and the projects that keep it. */
+export interface StudioPromise {
   title: string;
-  body: string;
+  line: string;
   glyph: GlyphName;
-  receipts: Receipt[];
+  projects: string[];
 }
 
-export const PRINCIPLES: Principle[] = [
+export const PROMISES: StudioPromise[] = [
   {
-    title: 'One idea, all the way down.',
-    body: 'Each project starts from one idea and is built out from there, so there is never more to learn than the idea needs.',
-    glyph: 'one',
-    receipts: [
-      { project: 'vorta', text: 'One tap reverses your orbit. That is the entire control scheme.' },
-      { project: 'solignition', text: 'One job: front the SOL a deploy needs. Repay, and the program’s authority is yours.' },
-      { project: 'diggle', text: 'Every descent is the same argument: fuel, hull, cargo. Pick two.' },
-    ],
+    title: 'Works where it’s used.',
+    line: 'In a field with no signal, on a plane, at a shop counter.',
+    glyph: 'pin',
+    // PestControl captures offline, Vorta plays offline (src/vorta/content.ts),
+    // and LiteScan runs on a local database.
+    projects: ['pestcontrol', 'vorta', 'litescan'],
   },
   {
     title: 'Fair by construction.',
-    body: 'We would rather prove a system is fair than ask you to take it on trust. The rules live in the code, where anyone can check them.',
+    line: 'The rules are in the code, where anyone can check them.',
     glyph: 'fair',
-    receipts: [
-      {
-        project: 'vorta',
-        text: 'Before a ring appears, the game checks that you can reach its gap. An autopilot plays the whole difficulty curve on every build.',
-      },
-      { project: 'diggle', text: 'The weekly challenge runs on a standardized loadout, so nobody buys a leaderboard.' },
-      {
-        project: 'solignition',
-        text: 'A default costs the deployed program and nothing more: after expiry and a 24-hour grace period, the protocol reclaims the rent to repay lenders.',
-      },
-    ],
+    // Vorta checks every gap can be reached, Diggle's weekly challenge runs on
+    // a standard loadout, and Solignition's loan terms are on-chain.
+    projects: ['vorta', 'diggle', 'solignition'],
   },
   {
-    title: 'Only what a feature needs.',
-    body: 'No more data, keys or permissions than the job takes. When something does leave your device, the policy says what, where and why.',
+    title: 'Only what it needs.',
+    line: 'No spare data, keys or permissions.',
     glyph: 'less',
-    receipts: [
-      { project: 'vorta', text: 'No account with us. Your progress lives on your device.' },
-      { project: 'legitai', text: 'Text you check is analysed, then discarded. It is never stored on our servers.' },
-      {
-        project: 'solignition',
-        text: 'No keys held, no multi-sig. The protocol holds deployment authority for the loan’s term and no longer.',
-      },
-    ],
+    // Vorta needs no account, LegitAi discards the text it checks, and
+    // Solignition holds no keys.
+    projects: ['vorta', 'legitai', 'solignition'],
   },
 ];

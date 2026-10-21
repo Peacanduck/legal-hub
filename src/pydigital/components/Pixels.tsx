@@ -1,4 +1,13 @@
-import { GLYPHS, GLYPH_TONES, MARK_GRID, MARK_TONES, type GlyphName } from '../art';
+import {
+  GLYPHS,
+  GLYPH_TONES,
+  MARK_GRID,
+  MARK_TONES,
+  PILLAR_HEAD,
+  PILLAR_SHAFT,
+  PILLAR_TONES,
+  type GlyphName,
+} from '../art';
 
 // One path per tone: a handful of nodes instead of a rect per pixel.
 const paths = (grid: string[], tones: Record<string, string>, inset = 0) =>
@@ -38,6 +47,37 @@ const GLYPH_PATHS = Object.fromEntries(
 export const Glyph = ({ name }: { name: GlyphName }) => (
   <svg className="pd-glyph" width="36" height="36" viewBox="0 0 9 9" aria-hidden="true">
     {GLYPH_PATHS[name].map((p) => (
+      <path key={p.fill} d={p.d} fill={p.fill} />
+    ))}
+  </svg>
+);
+
+const PILLAR_HEAD_PATHS = paths(PILLAR_HEAD, PILLAR_TONES);
+const PILLAR_SHAFT_PATHS = paths([PILLAR_SHAFT], PILLAR_TONES);
+
+/** A fire column's brazier and capital. CSS sizes it. */
+export const PillarHead = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox={`0 0 ${PILLAR_HEAD[0].length} ${PILLAR_HEAD.length}`}
+    shapeRendering="crispEdges"
+    aria-hidden="true"
+  >
+    {PILLAR_HEAD_PATHS.map((p) => (
+      <path key={p.fill} d={p.d} fill={p.fill} />
+    ))}
+  </svg>
+);
+
+/** A fire column's shaft: one row of flutes, stretched to fill its box. */
+export const PillarShaft = () => (
+  <svg
+    viewBox={`0 0 ${PILLAR_SHAFT.length} 1`}
+    preserveAspectRatio="none"
+    shapeRendering="crispEdges"
+    aria-hidden="true"
+  >
+    {PILLAR_SHAFT_PATHS.map((p) => (
       <path key={p.fill} d={p.d} fill={p.fill} />
     ))}
   </svg>

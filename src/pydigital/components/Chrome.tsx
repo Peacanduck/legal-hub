@@ -47,7 +47,7 @@ export const Footer = () => (
           <Mark size={24} />
           <span>Py Digital</span>
         </p>
-        <p className="pd-fine">Games, smart contracts and DeFi, built all the way down.</p>
+        <p className="pd-fine">Software, built all the way down.</p>
       </div>
       <nav aria-label="Projects">
         <p className="pd-footer-head">Projects</p>

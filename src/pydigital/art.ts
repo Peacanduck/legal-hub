@@ -24,21 +24,33 @@ export const MARK_TONES: Record<string, string> = {
   '4': '#ffd88a',
 };
 
-export type GlyphName = 'one' | 'fair' | 'less' | 'play' | 'code' | 'ring' | 'chart';
+export type GlyphName = 'scan' | 'play' | 'ring' | 'pin' | 'fair' | 'less';
 
-/** One glyph per principle and per practice, in the mark's pixels. */
+/** One glyph per practice and per promise, in the mark's pixels. */
 export const GLYPHS: Record<GlyphName, string[]> = {
-  // One lit pixel in a field of dim ones.
-  one: [
-    '1.1.1.1.1',
+  // A barcode, with the scanner's line across it.
+  scan: [
+    '2.22.2.22',
+    '2.22.2.22',
+    '2.22.2.22',
+    '333333333',
+    '2.22.2.22',
+    '2.22.2.22',
+    '2.22.2.22',
     '.........',
     '1.1.1.1.1',
-    '.........',
-    '1.1.3.1.1',
-    '.........',
-    '1.1.1.1.1',
-    '.........',
-    '1.1.1.1.1',
+  ],
+  // A map pin, lit where it stands.
+  pin: [
+    '..22222..',
+    '.2222222.',
+    '222...222',
+    '22..3..22',
+    '222...222',
+    '.2222222.',
+    '..22222..',
+    '...222...',
+    '....2....',
   ],
   // A balance, level.
   fair: [
@@ -76,18 +88,6 @@ export const GLYPHS: Record<GlyphName, string[]> = {
     '..22.....',
     '..2......',
   ],
-  // Braces round a lit pixel.
-  code: [
-    '..22.22..',
-    '..2...2..',
-    '..2...2..',
-    '..2...2..',
-    '.2..3..2.',
-    '..2...2..',
-    '..2...2..',
-    '..2...2..',
-    '..22.22..',
-  ],
   // A ring with a spark dropping into its gap, after Solignition's mark.
   ring: [
     '...2.2...',
@@ -100,22 +100,37 @@ export const GLYPHS: Record<GlyphName, string[]> = {
     '.22...22.',
     '...222...',
   ],
-  // A price line over its axis, the latest point lit.
-  chart: [
-    '1........',
-    '1......3.',
-    '1.....2..',
-    '1.2..2...',
-    '1.22.2...',
-    '12..2....',
-    '1........',
-    '1........',
-    '111111111',
-  ],
 };
 
 export const GLYPH_TONES: Record<string, string> = {
   '1': 'rgba(246, 239, 230, 0.26)',
   '2': 'rgba(246, 239, 230, 0.7)',
   '3': '#ff6a2b',
+};
+
+/** The top of a fire column, under its flame: a bronze brazier, its rim lit
+ *  by the fire, standing on the column's capital. */
+export const PILLAR_HEAD = [
+  '556666666655',
+  '.4444444444.',
+  '..44444444..',
+  '....4444....',
+  '.....44.....',
+  '...444444...',
+  '333333333333',
+  '222222222222',
+  '.1222222221.',
+  '..11111111..',
+];
+
+/** One row of the column's fluted shaft, stretched to its height. */
+export const PILLAR_SHAFT = '13232321';
+
+export const PILLAR_TONES: Record<string, string> = {
+  '1': '#1d1612',
+  '2': '#2e241e',
+  '3': '#4a372b',
+  '4': '#6b3218',
+  '5': '#b9481b',
+  '6': '#ff8a48',
 };

@@ -7,19 +7,20 @@ import { EmberField } from './components/EmberField';
 import { LegitAiScene } from './components/LegitAiScene';
 import { Glyph, Mark } from './components/Pixels';
 import { Footer, SmartLink, TopBar } from './components/Chrome';
+import { Pillars } from './components/Pillars';
 import { SolignitionScene } from './components/SolignitionScene';
 import { VortaScene } from './components/VortaScene';
 import {
   DOCS,
+  EARLIER,
   LEGAL_APPS,
   PRACTICES,
-  PRINCIPLES,
+  PROMISES,
   SHOWCASE,
   STUDIO_EMAIL,
   accentOf,
+  chipFor,
   docHref,
-  projectAnchor,
-  projectById,
   shortName,
   type Project,
   type Scene,
@@ -53,6 +54,7 @@ export const PyDigitalPage = () => {
       </a>
 
       <TopBar />
+      <Pillars hero={heroRef} />
 
       <main id="main">
         {/* ── Hero ───────────────────────────────────────────── */}
@@ -61,17 +63,17 @@ export const PyDigitalPage = () => {
           <div className="pd-wrap pd-hero-layout">
             <div className="pd-hero-copy">
               <p className="pd-eyebrow">
-                <span className="pd-hide-narrow">Py Digital&nbsp;&middot;&nbsp;</span>Games, smart contracts &amp; DeFi
+                <span className="pd-hide-narrow">Py Digital&nbsp;&middot;&nbsp;</span>Software studio since 2015
               </p>
               <h1 className="pd-display">
-                <span className="pd-display-line">Games and DeFi, </span>
-                built all the way down
+                <span className="pd-display-line">Software, built </span>
+                all the way down
                 <span className="pd-stop" aria-hidden="true" />
                 <span className="pd-sr">.</span>
               </h1>
               <p className="pd-lede">
-                Py Digital is an independent studio. We make games and apps for your phone, write smart contracts and
-                DeFi protocols on Solana, and are setting up a proprietary trading firm.
+                Since 2015 we&rsquo;ve built point-of-sale and field-data systems for businesses, games and apps for
+                your phone, and smart contracts and DeFi on Solana.
               </p>
               <div className="pd-cta-row">
                 <a className="pd-btn pd-btn--solid" href="#work">
@@ -106,8 +108,8 @@ export const PyDigitalPage = () => {
               <p className="pd-eyebrow">
                 <span className="pd-index">01</span>What we build
               </p>
-              <h2 className="pd-h2">From one-thumb games to on-chain lending.</h2>
-              <p className="pd-body">Four kinds of work, from one studio, held to one standard.</p>
+              <h2 className="pd-h2">From shop counters to on-chain lending.</h2>
+              <p className="pd-body">Three kinds of work, from one studio, since 2015.</p>
             </header>
             <ul className="pd-practices">
               {PRACTICES.map((p, i) => (
@@ -116,16 +118,10 @@ export const PyDigitalPage = () => {
                   <h3>{p.title}</h3>
                   <p>{p.body}</p>
                   <div className="pd-practice-foot">
-                    {p.projects.map((id) => {
-                      const project = projectById(id);
-                      if (!project) return null;
-                      return (
-                        <a key={id} className="pd-chip" href={projectAnchor(id)} style={accent(project.accent)}>
-                          {shortName(project.name)}
-                        </a>
-                      );
-                    })}
-                    {p.status && <span className="pd-status">{p.status}</span>}
+                    {p.projects.map((id) => (
+                      <ProjectChip key={id} id={id} />
+                    ))}
+                    {p.since && <span className="pd-since">{p.since}</span>}
                   </div>
                 </li>
               ))}
@@ -152,38 +148,58 @@ export const PyDigitalPage = () => {
                 <Work key={project.id} project={project} index={i} />
               ))}
             </div>
+
+            <div className="pd-earlier">
+              <h3 className="pd-earlier-label pd-reveal">Earlier work &middot; Business systems</h3>
+              <ul className="pd-earlier-list">
+                {EARLIER.map((p, i) => (
+                  <li
+                    key={p.id}
+                    className="pd-earlier-card pd-reveal"
+                    id={`project-${p.id}`}
+                    style={{ transitionDelay: `${i * 90}ms` }}
+                  >
+                    <p className="pd-earlier-meta">
+                      {p.years}
+                      <span aria-hidden="true"> &middot; </span>
+                      <span className="pd-sr">, </span>
+                      {p.kind}
+                    </p>
+                    <h4>{p.name}</h4>
+                    <p className="pd-earlier-summary">{p.summary}</p>
+                    <ul className="pd-earlier-stack" aria-label="Built with">
+                      {p.stack.map((s) => (
+                        <li key={s}>{s}</li>
+                      ))}
+                    </ul>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
-        {/* ── Principles ─────────────────────────────────────── */}
+        {/* ── How we build ───────────────────────────────────── */}
         <section className="pd-section pd-section--principles" id="principles">
           <div className="pd-wrap">
             <header className="pd-head pd-reveal">
               <p className="pd-eyebrow">
                 <span className="pd-index">03</span>How we build
               </p>
-              <h2 className="pd-h2">Three rules, every project.</h2>
-              <p className="pd-body">
-                Fairness checks you&rsquo;ll never notice, programs that hold no keys, policies you can actually read.
-                Each rule comes with where it shows up in what we&rsquo;ve shipped.
-              </p>
+              <h2 className="pd-h2">Three promises.</h2>
             </header>
             <ol className="pd-principles">
-              {PRINCIPLES.map((p, i) => (
+              {PROMISES.map((p, i) => (
                 <li key={p.title} className="pd-principle pd-reveal" style={{ transitionDelay: `${i * 90}ms` }}>
                   <Glyph name={p.glyph} />
                   <h3>{p.title}</h3>
-                  <p>{p.body}</p>
-                  <ul className="pd-receipts" aria-label="Where it shows">
-                    {p.receipts.map((r) => {
-                      const project = projectById(r.project);
-                      return (
-                        <li key={r.text} style={accent(accentOf(r.project))}>
-                          <span className="pd-chip">{project ? shortName(project.name) : r.project}</span>
-                          <span>{r.text}</span>
-                        </li>
-                      );
-                    })}
+                  <p>{p.line}</p>
+                  <ul className="pd-principle-chips" aria-label="Where it shows">
+                    {p.projects.map((id) => (
+                      <li key={id}>
+                        <ProjectChip id={id} />
+                      </li>
+                    ))}
                   </ul>
                 </li>
               ))}
@@ -350,6 +366,17 @@ const Work = ({ project, index }: { project: Project; index: number }) => {
         </div>
       </div>
     </article>
+  );
+};
+
+/** A chip that scrolls to a project's row or card on this page. */
+const ProjectChip = ({ id }: { id: string }) => {
+  const chip = chipFor(id);
+  if (!chip) return null;
+  return (
+    <a className="pd-chip" href={chip.href} style={accent(chip.accent)}>
+      {chip.name}
+    </a>
   );
 };
 
